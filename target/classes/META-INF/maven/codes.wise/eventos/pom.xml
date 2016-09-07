@@ -42,5 +42,12 @@
 	    <artifactId>simplelatlng</artifactId>
 	    <version>1.3.1</version>
 	</dependency>
+	
+	<!-- http://search.maven.org/#artifactdetails%7Corg.threeten%7Cthreeten-extra%7C1.0%7Cjar -->
+	<dependency>
+	    <groupId>org.threeten</groupId>
+	    <artifactId>threeten-extra</artifactId>
+    <version>1.0</version>
+</dependency>
   </dependencies>
 </project>

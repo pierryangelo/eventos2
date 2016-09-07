@@ -1,8 +1,8 @@
 package codes.wise.eventos.modelo.espaco_fisico;
 
-import java.util.List;
-
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -10,7 +10,9 @@ import com.javadocmd.simplelatlng.LatLng;
 
 import codes.wise.eventos.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
 import codes.wise.eventos.excecoes.EspacosFisicosComLocalizacoesIguaisException;
+import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
 import codes.wise.eventos.modelo.atividade.Atividade;
+import static codes.wise.eventos.util.TimeUtil.verificaConflito;;
 
 public class EspacoFisico {
 	private Integer id;
@@ -27,21 +29,35 @@ public class EspacoFisico {
 		espacosFisicosFilhos = Lists.newArrayList();
 	}
 	
+	public void adicionaAtividade(Atividade atividade) 
+			throws HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
+		for (Atividade a : atividades) {
+			if (verificaConflito(a.getDataEHoraDeInicio(), a.getDataEHoraDeTermino(), 
+					atividade.getDataEHoraDeInicio(), atividade.getDataEHoraDeTermino())) {
+				throw new HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException();
+			}
+		}
+		this.atividades.add(atividade);
+	}
+	
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) throws 
 			EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException, 
 			EspacosFisicosComLocalizacoesIguaisException {
 		
 		checkNotNull(espacoFisico);
 		
+		// to do: implementar hashCode
 		if (espacoFisico.equals(espacoFisicoPai)) {
 			throw new EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException();
 		}
 		
+		// verifica se os espacos tem a mesma localizacão e atividade conflita com o horário de 
+		// alguma outra atividade
 		if (espacoFisico.localizacao.equals(espacoFisico.localizacao)) {
 			throw new EspacosFisicosComLocalizacoesIguaisException();
 		}
 		
-		espacosFisicosFilhos.add(espacoFisico);
+		this.espacosFisicosFilhos.add(espacoFisico);
 	}
 	
 	public EspacoFisico getEspacoFisicoPai() {
