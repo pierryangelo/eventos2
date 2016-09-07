@@ -1,5 +1,5 @@
 package codes.wise.eventos.modelo;
 
-public enum TipoEvento {
+public enum TipoDeEvento {
 	CONGRESSO, SIMPOSIO, SEMANA_CULTURAL;
 }
