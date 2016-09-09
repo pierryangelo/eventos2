@@ -5,10 +5,17 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import codes.wise.eventos.excecoes.EventoSateliteJaAdicionadoException;
+import codes.wise.eventos.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
+import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
+import codes.wise.eventos.excecoes.JaExisteAtividadeAdicionadaException;
+import codes.wise.eventos.excecoes.JaExisteEspacoFisicoAdicionadoException;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.cupom.Descontavel;
+import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 
 public class Evento {
+	private Evento eventoPai;
 	private Integer id;
 	private String nome;
 	private String descricao;
@@ -20,10 +27,45 @@ public class Evento {
 	private Visibilidade visibilidade;
 	private List<Atividade> atividades;
 	private List<Descontavel> descontaveis;
+	private List<EspacoFisico> espacosFisicos;
+	private List<Evento> eventosSatelites;
 	
 	public Evento() {
 		atividades = Lists.newArrayList();
 		descontaveis = Lists.newArrayList();
+		espacosFisicos = Lists.newArrayList();
+		eventosSatelites = Lists.newArrayList();
+	}
+	
+	public void adicionaEventoSatelite(Evento eventoSatelite) 
+			throws EventoSateliteJaAdicionadoException {
+		if (eventosSatelites.contains(eventoSatelite)) {
+			throw new EventoSateliteJaAdicionadoException();
+		}
+		if (eventoSatelite.equals(eventoPai)) {
+			throw new EventoSateliteNaoPodeSerEventoPaiException();
+		}
+		eventosSatelites.add(eventoSatelite);
+	}
+	
+	// to do: hashCode e equals
+	public void adicionaAtividade(Atividade atividade, EspacoFisico espacoFisico) 
+			throws JaExisteAtividadeAdicionadaException, 
+			HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
+		if (atividades.contains(atividade)) {
+			throw new JaExisteAtividadeAdicionadaException();
+		}
+		
+		espacoFisico.adicionaAtividade(atividade);
+		atividades.add(atividade);
+	}
+	
+	public void adicionaEspacoFisico(EspacoFisico espacoFisico) 
+			throws JaExisteEspacoFisicoAdicionadoException {
+		if (espacosFisicos.contains(espacoFisico)) {
+			throw new JaExisteEspacoFisicoAdicionadoException();
+		}
+		espacosFisicos.add(espacoFisico);
 	}
 	
 	public Integer getId() {
