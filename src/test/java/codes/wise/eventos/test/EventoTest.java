@@ -3,6 +3,8 @@ package codes.wise.eventos.test;
 import org.junit.Before;
 import org.junit.Test;
 
+import codes.wise.eventos.excecoes.EventoSateliteJaAdicionadoException;
+import codes.wise.eventos.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
 import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
 import codes.wise.eventos.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.atividade.Atividade;
@@ -32,6 +34,19 @@ public class EventoTest {
 		a2.setId(1);
 		e1.adicionaAtividade(a1, ep1);
 		e1.adicionaAtividade(a2, ep2);
+	}
+	
+	@Test(expected=EventoSateliteJaAdicionadoException.class)
+	public void naoAceitaEventosSatelitesRepetidos() 
+			throws EventoSateliteJaAdicionadoException, EventoSateliteNaoPodeSerEventoPaiException {
+		e1.adicionaEventoSatelite(e2);
+		e1.adicionaEventoSatelite(e2);
+	}
+	
+	@Test(expected=EventoSateliteNaoPodeSerEventoPaiException.class)
+	public void eventoSateliteNaoPodeSerEventoPai() 
+			throws EventoSateliteJaAdicionadoException, EventoSateliteNaoPodeSerEventoPaiException {
+		e1.adicionaEventoSatelite(e1);
 	}
 	
 }

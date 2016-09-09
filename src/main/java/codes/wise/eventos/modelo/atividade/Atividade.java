@@ -8,6 +8,13 @@ import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.util.BigDecimalUtil;
 
 public class Atividade {
+	@Override
+	public String toString() {
+		return "Atividade [nome=" + nome + ", dataEHoraDeInicio=" + dataEHoraDeInicio + ", dataEHoraDeTermino="
+				+ dataEHoraDeTermino + ", espacoFisico=" + espacoFisico + ", tipoDeAtividade=" + tipoDeAtividade
+				+ ", valor=" + valor + ", isPaga=" + isPaga + "]";
+	}
+
 	private Integer id;
 	private Evento evento;
 	private String nome;

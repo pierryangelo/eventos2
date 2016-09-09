@@ -1,6 +1,10 @@
 package codes.wise.eventos.modelo.evento;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -38,11 +42,11 @@ public class Evento {
 	}
 	
 	public void adicionaEventoSatelite(Evento eventoSatelite) 
-			throws EventoSateliteJaAdicionadoException {
+			throws EventoSateliteJaAdicionadoException, EventoSateliteNaoPodeSerEventoPaiException {
 		if (eventosSatelites.contains(eventoSatelite)) {
 			throw new EventoSateliteJaAdicionadoException();
 		}
-		if (eventoSatelite.equals(eventoPai)) {
+		if (eventoSatelite.equals(this)) {
 			throw new EventoSateliteNaoPodeSerEventoPaiException();
 		}
 		eventosSatelites.add(eventoSatelite);
@@ -55,7 +59,6 @@ public class Evento {
 		if (atividades.contains(atividade)) {
 			throw new JaExisteAtividadeAdicionadaException();
 		}
-		
 		espacoFisico.adicionaAtividade(atividade);
 		atividades.add(atividade);
 	}
@@ -66,6 +69,22 @@ public class Evento {
 			throw new JaExisteEspacoFisicoAdicionadoException();
 		}
 		espacosFisicos.add(espacoFisico);
+	}
+	
+	/**
+	 * Retorna agenda do evento ordenada por data de início das atividades.
+	 * @return String
+	 */
+	public String getAgenda() {
+		StringBuilder texto = new StringBuilder();
+		
+		atividades.sort((a1, a2) -> a1.getDataEHoraDeInicio().compareTo(a2.getDataEHoraDeInicio()));
+		atividades.forEach(a -> {
+			texto.append("Atividade: " + a.getNome() + "\n" +
+					"Inicia em: " + a.getDataEHoraDeInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n");
+		});
+		
+		return texto.toString();
 	}
 	
 	public Integer getId() {

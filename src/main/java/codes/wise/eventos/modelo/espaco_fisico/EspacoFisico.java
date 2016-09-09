@@ -17,6 +17,7 @@ import static codes.wise.eventos.util.TimeUtil.verificaConflitoDeHorarios;;
 public class EspacoFisico {
 	private Integer id;
 	private EspacoFisico espacoFisicoPai;
+	private String nome;
 	private LatLng localizacao;
 	private String endereco;
 	private String descricao;
@@ -46,19 +47,21 @@ public class EspacoFisico {
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) throws 
 			EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException, 
 			EspacosFisicosComLocalizacoesIguaisException {
-		
 		checkNotNull(espacoFisico);
-		
 		// to do: implementar hashCode
 		if (espacoFisico.equals(espacoFisicoPai)) {
 			throw new EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException();
 		}
-		
 		if (espacoFisico.localizacao.equals(espacoFisico.localizacao)) {
 			throw new EspacosFisicosComLocalizacoesIguaisException();
 		}
-		
 		this.espacosFisicosFilhos.add(espacoFisico);
+	}
+	
+	public String getAgenda() {
+		
+		
+		return null;
 	}
 	
 	public EspacoFisico getEspacoFisicoPai() {
@@ -132,4 +135,13 @@ public class EspacoFisico {
 	public void setCapacidade(Integer capacidade) {
 		this.capacidade = capacidade;
 	}
+	
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 }
