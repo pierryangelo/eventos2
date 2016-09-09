@@ -12,7 +12,7 @@ import codes.wise.eventos.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFis
 import codes.wise.eventos.excecoes.EspacosFisicosComLocalizacoesIguaisException;
 import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
 import codes.wise.eventos.modelo.atividade.Atividade;
-import static codes.wise.eventos.util.TimeUtil.verificaConflito;;
+import static codes.wise.eventos.util.TimeUtil.verificaConflitoDeHorarios;;
 
 public class EspacoFisico {
 	private Integer id;
@@ -20,6 +20,8 @@ public class EspacoFisico {
 	private LatLng localizacao;
 	private String endereco;
 	private String descricao;
+	// to do: fazer teste da capacidade
+	private Integer capacidade;
 	private TipoDeEspacoFisico tipoDeEspacoFisico;
 	private List<Atividade> atividades;
 	private List<EspacoFisico> espacosFisicosFilhos;
@@ -32,11 +34,12 @@ public class EspacoFisico {
 	public void adicionaAtividade(Atividade atividade) 
 			throws HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
 		for (Atividade a : atividades) {
-			if (verificaConflito(a.getDataEHoraDeInicio(), a.getDataEHoraDeTermino(), 
+			if (verificaConflitoDeHorarios(a.getDataEHoraDeInicio(), a.getDataEHoraDeTermino(), 
 					atividade.getDataEHoraDeInicio(), atividade.getDataEHoraDeTermino())) {
 				throw new HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException();
 			}
 		}
+		atividade.setEspacoFisico(this);
 		this.atividades.add(atividade);
 	}
 	
@@ -51,8 +54,6 @@ public class EspacoFisico {
 			throw new EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException();
 		}
 		
-		// verifica se os espacos tem a mesma localizacão e atividade conflita com o horário de 
-		// alguma outra atividade
 		if (espacoFisico.localizacao.equals(espacoFisico.localizacao)) {
 			throw new EspacosFisicosComLocalizacoesIguaisException();
 		}
@@ -122,5 +123,13 @@ public class EspacoFisico {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Integer getCapacidade() {
+		return capacidade;
+	}
+
+	public void setCapacidade(Integer capacidade) {
+		this.capacidade = capacidade;
 	}
 }

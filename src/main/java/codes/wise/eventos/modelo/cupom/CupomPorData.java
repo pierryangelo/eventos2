@@ -1,4 +1,4 @@
-package codes.wise.eventos.modelo;
+package codes.wise.eventos.modelo.cupom;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
