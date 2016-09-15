@@ -2,6 +2,7 @@ package codes.wise.eventos.modelo.espaco_fisico;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -59,9 +60,15 @@ public class EspacoFisico {
 	}
 	
 	public String getAgenda() {
+		StringBuilder texto = new StringBuilder();
 		
+		atividades.sort((a1, a2) -> a1.getDataEHoraDeInicio().compareTo(a2.getDataEHoraDeInicio()));
+		atividades.forEach(a -> {
+			texto.append("Atividade: " + a.getNome() + "\n" +
+					"Inicia em: " + a.getDataEHoraDeInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n");
+		});
 		
-		return null;
+		return texto.toString();
 	}
 	
 	public EspacoFisico getEspacoFisicoPai() {

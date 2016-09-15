@@ -1,10 +1,7 @@
 package codes.wise.eventos.modelo.evento;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.Comparator;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -17,10 +14,12 @@ import codes.wise.eventos.excecoes.JaExisteEspacoFisicoAdicionadoException;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
+import codes.wise.eventos.modelo.usuario.Equipe;
+import codes.wise.eventos.modelo.usuario.Participante;
 
 public class Evento {
-	private Evento eventoPai;
 	private Integer id;
+	private Evento eventoPai;
 	private String nome;
 	private String descricao;
 	private LocalDate inicio;
@@ -33,6 +32,8 @@ public class Evento {
 	private List<Descontavel> descontaveis;
 	private List<EspacoFisico> espacosFisicos;
 	private List<Evento> eventosSatelites;
+	private Equipe equipeResponsavel;
+	private List<Participante> participantes;
 	
 	public Evento() {
 		atividades = Lists.newArrayList();
@@ -165,5 +166,13 @@ public class Evento {
 
 	public void setDescontaveis(List<Descontavel> descontaveis) {
 		this.descontaveis = descontaveis;
+	}
+
+	public Evento getEventoPai() {
+		return eventoPai;
+	}
+
+	public void setEventoPai(Evento eventoPai) {
+		this.eventoPai = eventoPai;
 	}
 }
