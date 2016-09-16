@@ -7,11 +7,11 @@ import org.junit.Test;
 
 import com.javadocmd.simplelatlng.LatLng;
 
-import codes.wise.eventos.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
-import codes.wise.eventos.excecoes.EspacosFisicosComLocalizacoesIguaisException;
-import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
+import codes.wise.eventos.modelo.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
+import codes.wise.eventos.modelo.excecoes.EspacosFisicosComLocalizacoesIguaisException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
 
 public class EspacoFisicoTest {
 	private EspacoFisico e1, e2;

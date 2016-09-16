@@ -3,13 +3,13 @@ package codes.wise.eventos.test;
 import org.junit.Before;
 import org.junit.Test;
 
-import codes.wise.eventos.excecoes.EventoSateliteJaAdicionadoException;
-import codes.wise.eventos.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
-import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
-import codes.wise.eventos.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
+import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
+import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
+import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 
 public class EventoTest {
 	private Evento e1, e2;

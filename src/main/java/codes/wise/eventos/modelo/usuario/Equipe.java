@@ -5,8 +5,8 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import codes.wise.eventos.excecoes.UsuarioJaAdicionadoAEquipeException;
-import codes.wise.eventos.excecoes.UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException;
+import codes.wise.eventos.modelo.excecoes.UsuarioJaAdicionadoAEquipeException;
+import codes.wise.eventos.modelo.excecoes.UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException;
 
 public class Equipe {
 	private List<Usuario> usuarios;

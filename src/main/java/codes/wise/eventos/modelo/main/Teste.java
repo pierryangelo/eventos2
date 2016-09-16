@@ -1,12 +1,12 @@
-package codes.wise.eventos.main;
+package codes.wise.eventos.modelo.main;
 
 import java.time.LocalDateTime;
 
-import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
-import codes.wise.eventos.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
+import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 
 public class Teste {
 	public static void main(String[] args) throws JaExisteAtividadeAdicionadaException, HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {

@@ -7,17 +7,19 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import codes.wise.evento.agenda.Agenda;
-import codes.wise.evento.agenda.Agendavel;
-import codes.wise.eventos.excecoes.EventoSateliteJaAdicionadoException;
-import codes.wise.eventos.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
-import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
-import codes.wise.eventos.excecoes.JaExisteAtividadeAdicionadaException;
-import codes.wise.eventos.excecoes.JaExisteEspacoFisicoAdicionadoException;
-import codes.wise.eventos.excecoes.UsuarioJaFezCheckinException;
+import codes.wise.evento.modelo.agenda.Agenda;
+import codes.wise.evento.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
+import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
+import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
+import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
+import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
+import codes.wise.eventos.modelo.excecoes.JaExisteEspacoFisicoAdicionadoException;
+import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
+import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.usuario.Equipe;
 import codes.wise.eventos.modelo.usuario.Usuario;
 
@@ -37,6 +39,7 @@ public class Evento implements Agendavel {
 	private List<Evento> eventosSatelites;
 	private Equipe equipeResponsavel;
 	private Set<Usuario> checkins;
+	private List<Inscricao> inscricoes;
 	
 	public Evento() {
 		this.atividades = Lists.newArrayList();
@@ -44,6 +47,15 @@ public class Evento implements Agendavel {
 		this.espacosFisicos = Lists.newArrayList();
 		this.eventosSatelites = Lists.newArrayList();
 		this.checkins = Sets.newHashSet();
+		this.inscricoes = Lists.newArrayList();
+	}
+	
+	public void adicionarInscricao(Inscricao inscricao) 
+			throws InscricaoJaExisteException {
+		if (this.inscricoes.contains(inscricao)) {
+			throw new InscricaoJaExisteException();
+		}
+		this.inscricoes.add(inscricao);
 	}
 	
 	public void adicionaEventoSatelite(Evento eventoSatelite) 

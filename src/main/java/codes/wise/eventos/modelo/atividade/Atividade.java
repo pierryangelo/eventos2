@@ -3,10 +3,10 @@ package codes.wise.eventos.modelo.atividade;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import codes.wise.evento.agenda.Agendavel;
+import codes.wise.evento.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
-import codes.wise.eventos.util.BigDecimalUtil;
+import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 public class Atividade implements Agendavel {
 	

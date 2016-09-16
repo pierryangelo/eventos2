@@ -1,5 +1,6 @@
 package codes.wise.eventos.modelo.espaco_fisico;
 
+import static codes.wise.eventos.modelo.util.TimeUtil.verificaConflitoDeHorarios;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.time.format.DateTimeFormatter;
@@ -9,12 +10,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.javadocmd.simplelatlng.LatLng;
 
-import codes.wise.evento.agenda.Agenda;
-import codes.wise.eventos.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
-import codes.wise.eventos.excecoes.EspacosFisicosComLocalizacoesIguaisException;
-import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
+import codes.wise.evento.modelo.agenda.Agenda;
 import codes.wise.eventos.modelo.atividade.Atividade;
-import static codes.wise.eventos.util.TimeUtil.verificaConflitoDeHorarios;;
+import codes.wise.eventos.modelo.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
+import codes.wise.eventos.modelo.excecoes.EspacosFisicosComLocalizacoesIguaisException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;;
 
 public class EspacoFisico {
 	private Integer id;

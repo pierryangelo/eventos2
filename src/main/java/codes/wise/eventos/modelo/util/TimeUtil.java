@@ -1,4 +1,4 @@
-package codes.wise.eventos.util;
+package codes.wise.eventos.modelo.util;
 
 import java.time.LocalDateTime;
 
