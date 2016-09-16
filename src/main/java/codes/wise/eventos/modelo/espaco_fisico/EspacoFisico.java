@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.javadocmd.simplelatlng.LatLng;
 
+import codes.wise.evento.agenda.Agenda;
 import codes.wise.eventos.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
 import codes.wise.eventos.excecoes.EspacosFisicosComLocalizacoesIguaisException;
 import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
@@ -36,8 +37,8 @@ public class EspacoFisico {
 	public void adicionaAtividade(Atividade atividade) 
 			throws HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
 		for (Atividade a : atividades) {
-			if (verificaConflitoDeHorarios(a.getDataEHoraDeInicio(), a.getDataEHoraDeTermino(), 
-					atividade.getDataEHoraDeInicio(), atividade.getDataEHoraDeTermino())) {
+			if (verificaConflitoDeHorarios(a.getInicio(), a.getTermino(), 
+					atividade.getInicio(), atividade.getTermino())) {
 				throw new HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException();
 			}
 		}
@@ -60,15 +61,7 @@ public class EspacoFisico {
 	}
 	
 	public String getAgenda() {
-		StringBuilder texto = new StringBuilder();
-		
-		atividades.sort((a1, a2) -> a1.getDataEHoraDeInicio().compareTo(a2.getDataEHoraDeInicio()));
-		atividades.forEach(a -> {
-			texto.append("Atividade: " + a.getNome() + "\n" +
-					"Inicia em: " + a.getDataEHoraDeInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n");
-		});
-		
-		return texto.toString();
+		return Agenda.getAgendaOrdemCrescente(atividades);
 	}
 	
 	public EspacoFisico getEspacoFisicoPai() {

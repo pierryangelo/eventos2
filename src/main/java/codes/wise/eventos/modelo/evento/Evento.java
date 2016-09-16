@@ -1,75 +1,87 @@
 package codes.wise.eventos.modelo.evento;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
+import codes.wise.evento.agenda.Agenda;
+import codes.wise.evento.agenda.Agendavel;
 import codes.wise.eventos.excecoes.EventoSateliteJaAdicionadoException;
 import codes.wise.eventos.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
 import codes.wise.eventos.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
 import codes.wise.eventos.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.excecoes.JaExisteEspacoFisicoAdicionadoException;
+import codes.wise.eventos.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.usuario.Equipe;
-import codes.wise.eventos.modelo.usuario.Participante;
+import codes.wise.eventos.modelo.usuario.Usuario;
 
-public class Evento {
+public class Evento implements Agendavel {
 	private Integer id;
 	private Evento eventoPai;
 	private String nome;
 	private String descricao;
-	private LocalDate inicio;
-	private LocalDate termino;
+	private LocalDateTime inicio;
+	private LocalDateTime termino;
 	private TipoDeEvento tipo;
 	private StatusDoEvento status;
-	// private StatusEvento statusEvento; # State Pattern
 	private Visibilidade visibilidade;
 	private List<Atividade> atividades;
-	private List<Descontavel> descontaveis;
+	private List<Descontavel> cupons;
 	private List<EspacoFisico> espacosFisicos;
 	private List<Evento> eventosSatelites;
 	private Equipe equipeResponsavel;
-	private List<Participante> participantes;
+	private Set<Usuario> checkins;
 	
 	public Evento() {
-		atividades = Lists.newArrayList();
-		descontaveis = Lists.newArrayList();
-		espacosFisicos = Lists.newArrayList();
-		eventosSatelites = Lists.newArrayList();
+		this.atividades = Lists.newArrayList();
+		this.cupons = Lists.newArrayList();
+		this.espacosFisicos = Lists.newArrayList();
+		this.eventosSatelites = Lists.newArrayList();
+		this.checkins = Sets.newHashSet();
 	}
 	
 	public void adicionaEventoSatelite(Evento eventoSatelite) 
 			throws EventoSateliteJaAdicionadoException, EventoSateliteNaoPodeSerEventoPaiException {
-		if (eventosSatelites.contains(eventoSatelite)) {
+		if (this.eventosSatelites.contains(eventoSatelite)) {
 			throw new EventoSateliteJaAdicionadoException();
 		}
 		if (eventoSatelite.equals(this)) {
 			throw new EventoSateliteNaoPodeSerEventoPaiException();
 		}
-		eventosSatelites.add(eventoSatelite);
+		this.eventosSatelites.add(eventoSatelite);
+	}
+	
+	public void fazerCheckin(Usuario usuario) 
+			throws UsuarioJaFezCheckinException {
+		if (this.checkins.contains(usuario)) {
+			throw new UsuarioJaFezCheckinException();
+		}
+		this.checkins.add(usuario);
 	}
 	
 	// to do: hashCode e equals
 	public void adicionaAtividade(Atividade atividade, EspacoFisico espacoFisico) 
 			throws JaExisteAtividadeAdicionadaException, 
 			HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
-		if (atividades.contains(atividade)) {
+		if (this.atividades.contains(atividade)) {
 			throw new JaExisteAtividadeAdicionadaException();
 		}
 		espacoFisico.adicionaAtividade(atividade);
-		atividades.add(atividade);
+		this.atividades.add(atividade);
 	}
 	
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) 
 			throws JaExisteEspacoFisicoAdicionadoException {
-		if (espacosFisicos.contains(espacoFisico)) {
+		if (this.espacosFisicos.contains(espacoFisico)) {
 			throw new JaExisteEspacoFisicoAdicionadoException();
 		}
-		espacosFisicos.add(espacoFisico);
+		this.espacosFisicos.add(espacoFisico);
 	}
 	
 	/**
@@ -77,15 +89,7 @@ public class Evento {
 	 * @return String
 	 */
 	public String getAgenda() {
-		StringBuilder texto = new StringBuilder();
-		
-		atividades.sort((a1, a2) -> a1.getDataEHoraDeInicio().compareTo(a2.getDataEHoraDeInicio()));
-		atividades.forEach(a -> {
-			texto.append("Atividade: " + a.getNome() + "\n" +
-					"Inicia em: " + a.getDataEHoraDeInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + "\n");
-		});
-		
-		return texto.toString();
+		return Agenda.getAgendaOrdemCrescente(atividades);
 	}
 	
 	public Integer getId() {
@@ -112,19 +116,19 @@ public class Evento {
 		this.descricao = descricao;
 	}
 
-	public LocalDate getInicio() {
+	public LocalDateTime getInicio() {
 		return inicio;
 	}
 
-	public void setInicio(LocalDate inicio) {
+	public void setInicio(LocalDateTime inicio) {
 		this.inicio = inicio;
 	}
 
-	public LocalDate getTermino() {
+	public LocalDateTime getTermino() {
 		return termino;
 	}
 
-	public void setTermino(LocalDate termino) {
+	public void setTermino(LocalDateTime termino) {
 		this.termino = termino;
 	}
 
@@ -161,11 +165,11 @@ public class Evento {
 	}
 
 	public List<Descontavel> getDescontaveis() {
-		return descontaveis;
+		return cupons;
 	}
 
 	public void setDescontaveis(List<Descontavel> descontaveis) {
-		this.descontaveis = descontaveis;
+		this.cupons = descontaveis;
 	}
 
 	public Evento getEventoPai() {

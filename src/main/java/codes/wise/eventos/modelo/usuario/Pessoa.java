@@ -1,11 +1,6 @@
 package codes.wise.eventos.modelo.usuario;
 
 public class Pessoa {
-	@Override
-	public String toString() {
-		return "Pessoa [nome=" + nome + ", endereco=" + endereco + ", cpf=" + cpf + ", telefone=" + telefone + "]";
-	}
-	
 	private String nome;
 	private String endereco;
 	private String cpf;
@@ -34,5 +29,10 @@ public class Pessoa {
 	}
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
+	}
+	
+	@Override
+	public String toString() {
+		return "Pessoa [nome=" + nome + ", endereco=" + endereco + ", cpf=" + cpf + ", telefone=" + telefone + "]";
 	}
 }

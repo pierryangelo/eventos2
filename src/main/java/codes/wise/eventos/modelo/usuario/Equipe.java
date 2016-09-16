@@ -9,8 +9,8 @@ import codes.wise.eventos.excecoes.UsuarioJaAdicionadoAEquipeException;
 import codes.wise.eventos.excecoes.UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException;
 
 public class Equipe {
-	List<Usuario> usuarios;
-	Usuario principal;
+	private List<Usuario> usuarios;
+	private Usuario responsavel;
 	
 	public Equipe() {
 		this.usuarios = Lists.newArrayList();
@@ -24,15 +24,13 @@ public class Equipe {
 	 */
 	public void adicionaUsuario(Usuario usuario) 
 			throws UsuarioJaAdicionadoAEquipeException {
-		if (usuarios.contains(usuario)) {
+		if (this.usuarios.contains(usuario)) {
 			throw new UsuarioJaAdicionadoAEquipeException();
 		}
-		
-		if (principal == null) {
-			principal = usuario;
+		if (this.responsavel == null) {
+			this.responsavel = usuario;
 		}
-		
-		usuarios.add(usuario);
+		this.usuarios.add(usuario);
 	}
 	
 	/**
@@ -46,7 +44,11 @@ public class Equipe {
 		if (!usuarios.contains(usuario)) {
 			throw new UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException();
 		}
-		this.principal = usuario;
+		this.responsavel = usuario;
+	}
+	
+	public Usuario getResponsavel() {
+		return this.responsavel;
 	}
 	
 	public List<Usuario> getUsuarios() {

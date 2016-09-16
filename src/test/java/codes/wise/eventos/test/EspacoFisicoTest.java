@@ -34,10 +34,10 @@ public class EspacoFisicoTest {
 			throws HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
 		Atividade a1 = new Atividade();
 		Atividade a2 = new Atividade();
-		a1.setDataEHoraDeInicio(LocalDateTime.of(2016, 10, 1, 8, 00));
-		a1.setDataEHoraDeTermino(LocalDateTime.of(2016, 10, 1, 10, 00));
-		a2.setDataEHoraDeInicio(LocalDateTime.of(2016, 10, 1, 9, 00));
-		a2.setDataEHoraDeTermino(LocalDateTime.of(2016, 10, 1, 11, 00));
+		a1.setInicio(LocalDateTime.of(2016, 10, 1, 8, 00));
+		a1.setTermino(LocalDateTime.of(2016, 10, 1, 10, 00));
+		a2.setInicio(LocalDateTime.of(2016, 10, 1, 9, 00));
+		a2.setTermino(LocalDateTime.of(2016, 10, 1, 11, 00));
 		e1.adicionaAtividade(a1);
 		e1.adicionaAtividade(a2);
 	}

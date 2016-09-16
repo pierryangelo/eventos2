@@ -3,24 +3,25 @@ package codes.wise.eventos.modelo.atividade;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import codes.wise.evento.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.util.BigDecimalUtil;
 
-public class Atividade {
+public class Atividade implements Agendavel {
 	
 	@Override
 	public String toString() {
-		return "Atividade [nome=" + nome + ", dataEHoraDeInicio=" + dataEHoraDeInicio + ", dataEHoraDeTermino="
-				+ dataEHoraDeTermino + ", espacoFisico=" + espacoFisico + ", tipoDeAtividade=" + tipoDeAtividade
+		return "Atividade [nome=" + nome + ", dataEHoraDeInicio=" + inicio + ", dataEHoraDeTermino="
+				+ termino + ", espacoFisico=" + espacoFisico + ", tipoDeAtividade=" + tipoDeAtividade
 				+ ", valor=" + valor + ", isPaga=" + isPaga + "]";
 	}
 
 	private Integer id;
 	private Evento evento;
 	private String nome;
-	private LocalDateTime dataEHoraDeInicio;
-	private LocalDateTime dataEHoraDeTermino;
+	private LocalDateTime inicio;
+	private LocalDateTime termino;
 	private EspacoFisico espacoFisico;
 	private TipoDeAtividade tipoDeAtividade;
 	private BigDecimal valor;
@@ -42,20 +43,20 @@ public class Atividade {
 		this.nome = nome;
 	}
 	
-	public LocalDateTime getDataEHoraDeInicio() {
-		return dataEHoraDeInicio;
+	public LocalDateTime getInicio() {
+		return inicio;
 	}
 	
-	public void setDataEHoraDeInicio(LocalDateTime dataEHoraDeInicio) {
-		this.dataEHoraDeInicio = dataEHoraDeInicio;
+	public void setInicio(LocalDateTime inicio) {
+		this.inicio = inicio;
 	}
 	
-	public LocalDateTime getDataEHoraDeTermino() {
-		return dataEHoraDeTermino;
+	public LocalDateTime getTermino() {
+		return termino;
 	}
 	
-	public void setDataEHoraDeTermino(LocalDateTime dataEHoraDeTermino) {
-		this.dataEHoraDeTermino = dataEHoraDeTermino;
+	public void setTermino(LocalDateTime termino) {
+		this.termino = termino;
 	}
 	
 	public EspacoFisico getEspacoFisico() {
