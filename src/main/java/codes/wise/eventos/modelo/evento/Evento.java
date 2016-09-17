@@ -7,8 +7,8 @@ import java.util.Set;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import codes.wise.evento.modelo.agenda.Agenda;
-import codes.wise.evento.modelo.agenda.Agendavel;
+import codes.wise.eventos.modelo.agenda.Agenda;
+import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;

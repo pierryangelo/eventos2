@@ -1,4 +1,4 @@
-package codes.wise.evento.modelo.agenda;
+package codes.wise.eventos.modelo.agenda;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;

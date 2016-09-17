@@ -10,7 +10,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.javadocmd.simplelatlng.LatLng;
 
-import codes.wise.evento.modelo.agenda.Agenda;
+import codes.wise.eventos.modelo.agenda.Agenda;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
 import codes.wise.eventos.modelo.excecoes.EspacosFisicosComLocalizacoesIguaisException;
