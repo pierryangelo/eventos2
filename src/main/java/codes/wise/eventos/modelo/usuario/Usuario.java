@@ -83,9 +83,4 @@ public class Usuario {
 	public void setEventosQueEstouInscrito(List<Participacao> participacoes) {
 		this.participacoes = participacoes;
 	}
-
-	@Override
-	public String toString() {
-		return "Usuario [id=" + id + ", email=" + email + ", password=" + password + ", dados=" + dadosPessoais + "]";
-	}
 }

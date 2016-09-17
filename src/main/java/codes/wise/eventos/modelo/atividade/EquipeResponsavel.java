@@ -1,15 +1,6 @@
 package codes.wise.eventos.modelo.atividade;
 
-import java.util.List;
+import codes.wise.eventos.modelo.usuario.Equipe;
 
-import com.google.common.collect.Lists;
-
-public class EquipeResponsavel {
-	private List<Responsavel> responsaveis;
-	
-	public EquipeResponsavel() {
-		this.responsaveis = Lists.newArrayList();
-	}
-	
-	
+public class EquipeResponsavel extends Equipe<Responsavel> {
 }

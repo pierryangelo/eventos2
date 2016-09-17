@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
+import codes.wise.eventos.modelo.usuario.Equipe;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 public class Atividade implements Agendavel {
@@ -16,6 +17,7 @@ public class Atividade implements Agendavel {
 	private LocalDateTime termino;
 	private EspacoFisico espacoFisico;
 	private TipoDeAtividade tipoDeAtividade;
+	private Equipe<Responsavel> equipeResponsavel;
 	private BigDecimal valor;
 	private Boolean isPaga;
 	
