@@ -53,6 +53,7 @@ public class ItemComposto extends Item {
 			preco = preco.add(item.getPreco());
 		});
 		
+		preco = preco.multiply(desconto);
 		return BigDecimalUtil.paraMonetario(preco);
 	}
 	
