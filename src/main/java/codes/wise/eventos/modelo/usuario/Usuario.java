@@ -5,21 +5,19 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-import codes.wise.eventos.modelo.evento.Evento;
-
 public class Usuario {
 	private Integer id;
 	private LocalDateTime dataCadastro;
 	private String email;
 	private String password; 
-	private Pessoa dados;
+	private Pessoa dadosPessoais;
 	private Boolean isAtivo;
-	private List<Evento> meusEventos;
-	private List<Evento> eventosQueEstouInscrito;
+	private List<Organizacao> organizacoes;
+	private List<Participacao> participacoes;
 
 	public Usuario() {
-		this.meusEventos = Lists.newArrayList();
-		this.eventosQueEstouInscrito = Lists.newArrayList();
+		this.organizacoes = Lists.newArrayList();
+		this.participacoes = Lists.newArrayList();
 	}
 	
 	public Integer getId() {
@@ -55,11 +53,11 @@ public class Usuario {
 	}
 
 	public Pessoa getDados() {
-		return dados;
+		return dadosPessoais;
 	}
 
 	public void setDados(Pessoa dados) {
-		this.dados = dados;
+		this.dadosPessoais = dados;
 	}
 
 	public Boolean getIsAtivo() {
@@ -70,24 +68,24 @@ public class Usuario {
 		this.isAtivo = isAtivo;
 	}
 
-	public List<Evento> getMeusEventos() {
-		return meusEventos;
+	public List<Organizacao> getOrganizacoes() {
+		return this.organizacoes;
 	}
 
-	public void setMeusEventos(List<Evento> meusEventos) {
-		this.meusEventos = meusEventos;
+	public void setMeusEventos(List<Organizacao> organizacoes) {
+		this.organizacoes = organizacoes;
 	}
 
-	public List<Evento> getEventosQueEstouInscrito() {
-		return eventosQueEstouInscrito;
+	public List<Participacao> getParticipacoes() {
+		return this.participacoes;
 	}
 
-	public void setEventosQueEstouInscrito(List<Evento> eventosQueEstouInscrito) {
-		this.eventosQueEstouInscrito = eventosQueEstouInscrito;
+	public void setEventosQueEstouInscrito(List<Participacao> participacoes) {
+		this.participacoes = participacoes;
 	}
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", email=" + email + ", password=" + password + ", dados=" + dados + "]";
+		return "Usuario [id=" + id + ", email=" + email + ", password=" + password + ", dados=" + dadosPessoais + "]";
 	}
 }
