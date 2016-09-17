@@ -3,55 +3,56 @@ package codes.wise.eventos.modelo.usuario;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
+import codes.wise.eventos.modelo.excecoes.MembroJaExisteNaListaDeMembros;
+import codes.wise.eventos.modelo.excecoes.MembroNaoExisteNaListaDeMembrosException;
 import codes.wise.eventos.modelo.excecoes.UsuarioJaAdicionadoAEquipeException;
 import codes.wise.eventos.modelo.excecoes.UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException;
 
-public class Equipe {
-	private List<Usuario> usuarios;
-	private Usuario responsavel;
-	
-	public Equipe() {
-		this.usuarios = Lists.newArrayList();
-	}
+public abstract class Equipe<E> implements Time<E> {
+	private List<E> membros;
+	private E principal;
 	
 	/**
-	 * Adiciona usuários à equipe. O primeiro usuário é automaticamente definido 
-	 * como usuário principal.
+	 * Adiciona membros à equipe. O primeiro membro é automaticamente definido 
+	 * como principal.
 	 * @param usuario
 	 * @throws UsuarioJaAdicionadoAEquipeException
 	 */
-	public void adicionaUsuario(Usuario usuario) 
-			throws UsuarioJaAdicionadoAEquipeException {
-		if (this.usuarios.contains(usuario)) {
-			throw new UsuarioJaAdicionadoAEquipeException();
+	@Override
+	public void adicionaMembro(E membro) 
+			throws MembroJaExisteNaListaDeMembros {
+		if (membros.contains(membro)) {
+			throw new MembroJaExisteNaListaDeMembros();
 		}
-		if (this.responsavel == null) {
-			this.responsavel = usuario;
+		if (this.principal == null) {
+			this.principal = membro;
 		}
-		this.usuarios.add(usuario);
+		this.membros.add(membro);
 	}
 	
 	/**
-	 * Define o usuário principal da equipe. Usuário principal precisa estar na lista de usuários
-	 * da equipe.
+	 * Define o membro principal da equipe. O membro principal precisa estar na 
+	 * lista de membros da equipe.
 	 * @param usuario
 	 * @throws UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException
 	 */
-	public void setPrincipal(Usuario usuario) 
-			throws UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException {
-		if (!usuarios.contains(usuario)) {
-			throw new UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException();
+	@Override
+	public void definePrincipal(E membro) 
+			throws MembroNaoExisteNaListaDeMembrosException {
+		if (!membros.contains(membro)) {
+			throw new MembroNaoExisteNaListaDeMembrosException();
 		}
-		this.responsavel = usuario;
+		principal = membro;
 	}
 	
-	public Usuario getResponsavel() {
-		return this.responsavel;
+	@Override
+	public E getPrincipal() {
+		return this.principal;
 	}
 	
-	public List<Usuario> getUsuarios() {
-		return ImmutableList.copyOf(usuarios);
+	@Override
+	public List<E> getMembros() {
+		return ImmutableList.copyOf(membros);
 	}
 }

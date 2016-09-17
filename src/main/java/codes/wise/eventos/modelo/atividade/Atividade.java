@@ -9,14 +9,6 @@ import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 public class Atividade implements Agendavel {
-	
-	@Override
-	public String toString() {
-		return "Atividade [nome=" + nome + ", dataEHoraDeInicio=" + inicio + ", dataEHoraDeTermino="
-				+ termino + ", espacoFisico=" + espacoFisico + ", tipoDeAtividade=" + tipoDeAtividade
-				+ ", valor=" + valor + ", isPaga=" + isPaga + "]";
-	}
-
 	private Integer id;
 	private Evento evento;
 	private String nome;
