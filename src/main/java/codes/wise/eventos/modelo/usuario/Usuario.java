@@ -5,12 +5,11 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
-public class Usuario {
+public class Usuario extends Pessoa {
 	private Integer id;
 	private LocalDateTime dataCadastro;
 	private String email;
 	private String password; 
-	private Pessoa dadosPessoais;
 	private Boolean isAtivo;
 	private List<Organizacao> organizacoes;
 	private List<Participacao> participacoes;
@@ -50,14 +49,6 @@ public class Usuario {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public Pessoa getDados() {
-		return dadosPessoais;
-	}
-
-	public void setDados(Pessoa dados) {
-		this.dadosPessoais = dados;
 	}
 
 	public Boolean getIsAtivo() {

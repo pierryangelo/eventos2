@@ -48,13 +48,10 @@ public class ItemComposto extends Item {
 		if (this.preco != null) {
 			return BigDecimalUtil.paraMonetario(preco);
 		}
-		preco = new BigDecimal(0);
-		itens.forEach(item -> {
-			preco = preco.add(item.getPreco());
-		});
-		
-		preco = preco.multiply(desconto);
-		return BigDecimalUtil.paraMonetario(preco);
+		BigDecimal total = itens.stream()
+                .map(Item::getPreco)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+		return BigDecimalUtil.paraMonetario(total);
 	}
 	
 	public void setDesconto(BigDecimal desconto) {
