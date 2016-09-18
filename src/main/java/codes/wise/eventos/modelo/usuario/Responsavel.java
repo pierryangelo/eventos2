@@ -1,6 +1,4 @@
-package codes.wise.eventos.modelo.atividade;
-
-import codes.wise.eventos.modelo.usuario.Pessoa;
+package codes.wise.eventos.modelo.usuario;
 
 public class Responsavel {
 	private Pessoa pessoa;
