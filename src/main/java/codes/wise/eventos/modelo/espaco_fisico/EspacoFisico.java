@@ -3,7 +3,6 @@ package codes.wise.eventos.modelo.espaco_fisico;
 import static codes.wise.eventos.modelo.util.TimeUtil.verificaConflitoDeHorarios;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -20,9 +19,9 @@ public class EspacoFisico {
 	private Integer id;
 	private EspacoFisico espacoFisicoPai;
 	private String nome;
-	private LatLng localizacao;
 	private String endereco;
 	private String descricao;
+	private LatLng localizacao;
 	// to do: fazer teste da capacidade
 	private Integer capacidade;
 	private TipoDeEspacoFisico tipoDeEspacoFisico;
@@ -30,8 +29,8 @@ public class EspacoFisico {
 	private List<EspacoFisico> espacosFisicosFilhos;
 
 	public EspacoFisico() {
-		atividades = Lists.newArrayList();
-		espacosFisicosFilhos = Lists.newArrayList();
+		this.atividades = Lists.newArrayList();
+		this.espacosFisicosFilhos = Lists.newArrayList();
 	}
 	
 	public void adicionaAtividade(Atividade atividade) 

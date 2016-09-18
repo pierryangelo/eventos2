@@ -21,6 +21,8 @@ public class Atividade implements Agendavel {
 	private BigDecimal valor;
 	private Boolean isPaga;
 	
+	public Atividade() {}
+	
 	public Evento getEvento() {
 		return evento;
 	}
@@ -82,7 +84,7 @@ public class Atividade implements Agendavel {
 	}
 	
 	public BigDecimal getValor() {
-		return BigDecimalUtil.paraMonetario(this.valor);
+		return this.valor;
 	}
 
 	public Integer getId() {

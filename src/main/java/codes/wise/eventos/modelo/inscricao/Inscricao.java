@@ -3,6 +3,7 @@ package codes.wise.eventos.modelo.inscricao;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import codes.wise.eventos.modelo.evento.Evento;
@@ -72,5 +73,45 @@ public class Inscricao {
 			return BigDecimalUtil.paraMonetario(new BigDecimal("1"));
 		}
 		return BigDecimalUtil.paraMonetario(desconto);
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public List<Item> getCarrinho() {
+		return ImmutableList.copyOf(carrinho);
+	}
+
+	public void setCarrinho(List<Item> carrinho) {
+		this.carrinho = carrinho;
+	}
+
+	public Participacao getParticipacao() {
+		return participacao;
+	}
+
+	public void setParticipacao(Participacao participacao) {
+		this.participacao = participacao;
+	}
+
+	public List<Descontavel> getCupons() {
+		return ImmutableList.copyOf(cupons);
+	}
+
+	public void setCupons(List<Descontavel> cupons) {
+		this.cupons = cupons;
+	}
+
+	public Evento getEvento() {
+		return evento;
+	}
+
+	public void setEvento(Evento evento) {
+		this.evento = evento;
 	}
 }
