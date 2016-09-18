@@ -79,6 +79,14 @@ public class Atividade implements Agendavel {
 		this.isPaga = isPaga;
 	}
 	
+	public Equipe<Responsavel> getEquipeResponsavel() {
+		return equipeResponsavel;
+	}
+
+	public void setEquipeResponsavel(Equipe<Responsavel> equipeResponsavel) {
+		this.equipeResponsavel = equipeResponsavel;
+	}
+
 	public void setValor(BigDecimal valor) {
 		this.valor = BigDecimalUtil.paraMonetario(this.valor);
 	}

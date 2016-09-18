@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import codes.wise.eventos.modelo.excecoes.OrganizacaoJaExisteNaListaDeOrganizacoesDoUsuarioException;
+import codes.wise.eventos.modelo.excecoes.ParticipacaoJaExisteNaListaDeParticipacoesDoUsuarioException;
+
 public class Usuario extends Pessoa {
 	private Integer id;
 	private LocalDateTime dataCadastro;
@@ -17,6 +20,22 @@ public class Usuario extends Pessoa {
 	public Usuario() {
 		this.organizacoes = Lists.newArrayList();
 		this.participacoes = Lists.newArrayList();
+	}
+	
+	public void adicionarParticipacao(Participacao participacao) 
+			throws ParticipacaoJaExisteNaListaDeParticipacoesDoUsuarioException {
+		if (this.participacoes.contains(participacao)) {
+			throw new ParticipacaoJaExisteNaListaDeParticipacoesDoUsuarioException();
+		}
+		this.participacoes.add(participacao);
+	}
+	
+	public void adicionarOrganizacao(Organizacao organizacao) 
+			throws OrganizacaoJaExisteNaListaDeOrganizacoesDoUsuarioException {
+		if (this.organizacoes.contains(organizacao)) {
+			throw new OrganizacaoJaExisteNaListaDeOrganizacoesDoUsuarioException();
+		}
+		this.organizacoes.add(organizacao);
 	}
 	
 	public Integer getId() {

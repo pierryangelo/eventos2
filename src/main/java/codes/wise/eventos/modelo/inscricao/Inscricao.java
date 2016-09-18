@@ -6,17 +6,15 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.EventoNaoContemCupomException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
-import codes.wise.eventos.modelo.usuario.Participacao;
-import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 public class Inscricao {
 	private Long id;
 	private List<Item> carrinho;
-	private Participacao participacao;
 	private List<Descontavel> cupons;
 	private Evento evento;
 
@@ -89,14 +87,6 @@ public class Inscricao {
 
 	public void setCarrinho(List<Item> carrinho) {
 		this.carrinho = carrinho;
-	}
-
-	public Participacao getParticipacao() {
-		return participacao;
-	}
-
-	public void setParticipacao(Participacao participacao) {
-		this.participacao = participacao;
 	}
 
 	public List<Descontavel> getCupons() {

@@ -20,7 +20,6 @@ import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.JaExisteEspacoFisicoAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
-import codes.wise.eventos.modelo.usuario.EquipeOrganizadora;
 import codes.wise.eventos.modelo.usuario.Usuario;
 
 public class Evento implements Agendavel {
