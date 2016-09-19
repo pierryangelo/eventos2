@@ -1,20 +1,32 @@
 package codes.wise.eventos.modelo.main;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import codes.wise.eventos.modelo.atividade.Atividade;
-import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
-import codes.wise.eventos.modelo.evento.Evento;
-import codes.wise.eventos.modelo.evento.EventoBuilder;
-import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
-import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
+import codes.wise.eventos.modelo.atividade.AtividadeBuilder;
+import codes.wise.eventos.modelo.dao.DAOGenerico;
+import codes.wise.eventos.modelo.excecoes.MembroJaExisteNaListaDeMembros;
+import codes.wise.eventos.modelo.usuario.EquipeResponsavel;
+import codes.wise.eventos.modelo.usuario.Pessoa;
+import codes.wise.eventos.modelo.usuario.Responsavel;
 
 public class Teste {
-	public static void main(String[] args) throws JaExisteAtividadeAdicionadaException, HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
-		Evento e = new EventoBuilder().comNome("Novo Evento").comDescricao("Teste").comInicio(LocalDateTime.now()).getEvento();
-		e.adicionaAtividade(new Atividade(), new EspacoFisico());
-
+	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros{
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("eventos");
+		EntityManager em = emf.createEntityManager();
+		
+		DAOGenerico<Atividade> dao = new DAOGenerico<Atividade>(Atividade.class);
+		EquipeResponsavel eq = new EquipeResponsavel();
+		
+		Atividade at = new AtividadeBuilder().comNome("Minha Atividade").comValor(new BigDecimal("100.0")).comEquipeResponsavel(new EquipeResponsavel()).getAtividade();
+		eq.adicionaMembro(new Responsavel(new Pessoa("Pierry"), "Posgraduado"));
+		em.getTransaction().begin();
+		dao.adiciona(at);
+		em.getTransaction().commit();
+		em.close();
 	}
-	
-	
 }

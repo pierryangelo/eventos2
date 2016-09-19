@@ -2,6 +2,11 @@ package codes.wise.eventos.modelo.cupom;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+
+@Entity
+@PrimaryKeyJoinColumn(name="id")
 public class CupomPorCodigo extends Cupom {
 	private String codigo;
 	

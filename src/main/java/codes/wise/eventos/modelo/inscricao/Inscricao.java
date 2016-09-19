@@ -3,6 +3,13 @@ package codes.wise.eventos.modelo.inscricao;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -12,10 +19,15 @@ import codes.wise.eventos.modelo.excecoes.EventoNaoContemCupomException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
+@Entity
 public class Inscricao {
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	@ElementCollection
 	private List<Item> carrinho;
+	@ElementCollection
 	private List<Descontavel> cupons;
+	@ManyToOne
 	private Evento evento;
 
 	public Inscricao() {

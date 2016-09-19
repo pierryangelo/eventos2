@@ -1,11 +1,22 @@
 package codes.wise.eventos.modelo.usuario;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
 import codes.wise.eventos.modelo.evento.Evento;
 
+@Entity
 public class Organizacao {
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	@OneToOne
 	private Usuario usuario;
+	@OneToOne
 	private Evento evento;
+	@OneToOne
 	private EquipeOrganizadora equipeOrganizadora;
 	
 	public Organizacao() {}

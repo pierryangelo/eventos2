@@ -2,11 +2,17 @@ package codes.wise.eventos.modelo.cupom;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.evento.Evento;
 
+@Entity
+@PrimaryKeyJoinColumn(name="id")
 public class CupomPorAtividade extends Cupom {
-	private Evento evento;
+	@OneToOne
 	private Atividade atividade;
 	
 	protected CupomPorAtividade(BigDecimal porcentagemDoDesconto, Evento evento, Atividade atividade) {

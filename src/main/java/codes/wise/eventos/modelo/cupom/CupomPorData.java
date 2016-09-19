@@ -3,6 +3,11 @@ package codes.wise.eventos.modelo.cupom;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+
+@Entity
+@PrimaryKeyJoinColumn(name="id")
 public class CupomPorData extends Cupom {
 	private LocalDateTime dataEHoraDeInicio;
 	private LocalDateTime dataEHoraDeTermino;

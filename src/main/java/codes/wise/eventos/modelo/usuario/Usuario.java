@@ -3,18 +3,26 @@ package codes.wise.eventos.modelo.usuario;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.PrimaryKeyJoinColumn;
+
 import com.google.common.collect.Lists;
 
 import codes.wise.eventos.modelo.excecoes.OrganizacaoJaExisteNaListaDeOrganizacoesDoUsuarioException;
 import codes.wise.eventos.modelo.excecoes.ParticipacaoJaExisteNaListaDeParticipacoesDoUsuarioException;
 
+@Entity
+@PrimaryKeyJoinColumn(name="id")
 public class Usuario extends Pessoa {
-	private Integer id;
 	private LocalDateTime dataCadastro;
 	private String email;
 	private String password; 
 	private Boolean isAtivo;
+	@ElementCollection
 	private List<Organizacao> organizacoes;
+	@ElementCollection
 	private List<Participacao> participacoes;
 
 	public Usuario() {
@@ -36,14 +44,6 @@ public class Usuario extends Pessoa {
 			throw new OrganizacaoJaExisteNaListaDeOrganizacoesDoUsuarioException();
 		}
 		this.organizacoes.add(organizacao);
-	}
-	
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
 	}
 
 	public LocalDateTime getDataCadastro() {

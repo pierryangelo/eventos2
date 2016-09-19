@@ -3,6 +3,12 @@ package codes.wise.eventos.modelo.atividade;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
 import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
@@ -10,14 +16,20 @@ import codes.wise.eventos.modelo.usuario.Equipe;
 import codes.wise.eventos.modelo.usuario.Responsavel;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
+@Entity
 public class Atividade implements Agendavel {
+
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	@OneToOne
 	private Evento evento;
 	private String nome;
 	private LocalDateTime inicio;
 	private LocalDateTime termino;
+	@OneToOne
 	private EspacoFisico espacoFisico;
 	private TipoDeAtividade tipoDeAtividade;
+	@OneToOne
 	private Equipe<Responsavel> equipeResponsavel;
 	private BigDecimal valor;
 	private Boolean isPaga;

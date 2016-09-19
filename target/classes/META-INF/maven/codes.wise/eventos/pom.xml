@@ -48,6 +48,13 @@
 	    <groupId>org.threeten</groupId>
 	    <artifactId>threeten-extra</artifactId>
     <version>1.0</version>
-</dependency>
+	</dependency>	
+	
+	<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+	<dependency>
+	    <groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	    <version>5.1.38</version>
+	</dependency>
   </dependencies>
 </project>

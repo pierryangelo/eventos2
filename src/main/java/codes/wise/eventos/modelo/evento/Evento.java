@@ -4,6 +4,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -22,21 +30,30 @@ import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.usuario.Usuario;
 
+@Entity
 public class Evento implements Agendavel {
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	@OneToOne
 	private Evento eventoPai;
 	private String nome;
 	private String descricao;
 	private LocalDateTime inicio;
 	private LocalDateTime termino;
 	private TipoDeEvento tipo;
-	private StatusDoEvento status;
-	private Visibilidade visibilidade;
+	//private StatusDoEvento status;
+	//private Visibilidade visibilidade;
+	@OneToMany
 	private List<Atividade> atividades;
+	@ElementCollection
 	private List<Descontavel> cupons;
+	@OneToMany
 	private List<EspacoFisico> espacosFisicos;
+	@ElementCollection
 	private List<Evento> eventosSatelites;
+	@ElementCollection
 	private Set<Usuario> checkins;
+	@ElementCollection
 	private List<Inscricao> inscricoes;
 	
 	public Evento() {
@@ -149,7 +166,7 @@ public class Evento implements Agendavel {
 	public void setTipo(TipoDeEvento tipo) {
 		this.tipo = tipo;
 	}
-
+	/*
 	public StatusDoEvento getStatus() {
 		return status;
 	}
@@ -165,6 +182,7 @@ public class Evento implements Agendavel {
 	public void setVisibilidade(Visibilidade visibilidade) {
 		this.visibilidade = visibilidade;
 	}
+	*/
 
 	public List<Atividade> getAtividades() {
 		return atividades;

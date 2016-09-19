@@ -5,6 +5,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.javadocmd.simplelatlng.LatLng;
@@ -15,8 +22,11 @@ import codes.wise.eventos.modelo.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEs
 import codes.wise.eventos.modelo.excecoes.EspacosFisicosComLocalizacoesIguaisException;
 import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;;
 
+@Entity
 public class EspacoFisico {
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	@OneToOne
 	private EspacoFisico espacoFisicoPai;
 	private String nome;
 	private String endereco;
@@ -25,7 +35,9 @@ public class EspacoFisico {
 	// to do: fazer teste da capacidade
 	private Integer capacidade;
 	private TipoDeEspacoFisico tipoDeEspacoFisico;
+	@OneToMany
 	private List<Atividade> atividades;
+	@OneToMany
 	private List<EspacoFisico> espacosFisicosFilhos;
 
 	public EspacoFisico() {
