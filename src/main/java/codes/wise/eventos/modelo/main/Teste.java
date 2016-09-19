@@ -8,24 +8,33 @@ import javax.persistence.Persistence;
 
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.atividade.AtividadeBuilder;
-import codes.wise.eventos.modelo.dao.DAOGenerico;
+import codes.wise.eventos.modelo.atividade.TipoDeAtividade;
+import codes.wise.eventos.modelo.dao.AtividadeDAO;
+import codes.wise.eventos.modelo.dao.EquipeResponsavelDAO;
 import codes.wise.eventos.modelo.excecoes.MembroJaExisteNaListaDeMembros;
 import codes.wise.eventos.modelo.usuario.EquipeResponsavel;
-import codes.wise.eventos.modelo.usuario.Pessoa;
-import codes.wise.eventos.modelo.usuario.Responsavel;
 
 public class Teste {
 	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros{
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("eventos");
 		EntityManager em = emf.createEntityManager();
 		
-		DAOGenerico<Atividade> dao = new DAOGenerico<Atividade>(Atividade.class);
+		EquipeResponsavelDAO equipeDao = new EquipeResponsavelDAO(em);
+		AtividadeDAO atividadeDao = new AtividadeDAO(em);
+
 		EquipeResponsavel eq = new EquipeResponsavel();
 		
-		Atividade at = new AtividadeBuilder().comNome("Minha Atividade").comValor(new BigDecimal("100.0")).comEquipeResponsavel(new EquipeResponsavel()).getAtividade();
-		eq.adicionaMembro(new Responsavel(new Pessoa("Pierry"), "Posgraduado"));
+		Atividade at = new AtividadeBuilder()
+				.comNome("CursoJPA")
+				.comValor(new BigDecimal(100))
+				.deTipo(TipoDeAtividade.PALESTRA)
+				.comEquipeResponsavel(eq)
+				.getAtividade();
+		
+		//eq.adicionaMembro(new Responsavel(new Pessoa("Pierry"), "Posgraduado"));
 		em.getTransaction().begin();
-		dao.adiciona(at);
+		equipeDao.adiciona(eq);
+		atividadeDao.adiciona(at);
 		em.getTransaction().commit();
 		em.close();
 	}

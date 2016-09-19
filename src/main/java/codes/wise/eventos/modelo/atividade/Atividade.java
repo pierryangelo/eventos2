@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,6 +30,7 @@ public class Atividade implements Agendavel {
 	private LocalDateTime termino;
 	@OneToOne
 	private EspacoFisico espacoFisico;
+	@Enumerated(EnumType.STRING)
 	private TipoDeAtividade tipoDeAtividade;
 	@OneToOne
 	private Equipe<Responsavel> equipeResponsavel;
@@ -101,7 +104,7 @@ public class Atividade implements Agendavel {
 	}
 
 	public void setValor(BigDecimal valor) {
-		this.valor = BigDecimalUtil.paraMonetario(this.valor);
+		this.valor = BigDecimalUtil.paraMonetario(valor);
 	}
 	
 	public BigDecimal getValor() {

@@ -3,7 +3,7 @@ package codes.wise.eventos.modelo.evento;
 import java.time.LocalDateTime;
 
 public class EventoBuilder {
-	protected Evento evento;
+	private Evento evento;
 	
 	public EventoBuilder() {
 		this.evento = new Evento();

@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +20,7 @@ import com.google.common.collect.Sets;
 import codes.wise.eventos.modelo.agenda.Agenda;
 import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.atividade.Atividade;
-import codes.wise.eventos.modelo.cupom.Descontavel;
+import codes.wise.eventos.modelo.cupom.Cupom;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
@@ -40,13 +42,13 @@ public class Evento implements Agendavel {
 	private String descricao;
 	private LocalDateTime inicio;
 	private LocalDateTime termino;
+	@Enumerated(EnumType.STRING)
 	private TipoDeEvento tipo;
-	//private StatusDoEvento status;
-	//private Visibilidade visibilidade;
+	private StatusDoEvento status;
 	@OneToMany
 	private List<Atividade> atividades;
 	@ElementCollection
-	private List<Descontavel> cupons;
+	private List<Cupom> cupons;
 	@OneToMany
 	private List<EspacoFisico> espacosFisicos;
 	@ElementCollection
@@ -166,7 +168,7 @@ public class Evento implements Agendavel {
 	public void setTipo(TipoDeEvento tipo) {
 		this.tipo = tipo;
 	}
-	/*
+
 	public StatusDoEvento getStatus() {
 		return status;
 	}
@@ -174,15 +176,6 @@ public class Evento implements Agendavel {
 	public void setStatus(StatusDoEvento status) {
 		this.status = status;
 	}
-
-	public Visibilidade getVisibilidade() {
-		return visibilidade;
-	}
-
-	public void setVisibilidade(Visibilidade visibilidade) {
-		this.visibilidade = visibilidade;
-	}
-	*/
 
 	public List<Atividade> getAtividades() {
 		return atividades;
@@ -192,11 +185,11 @@ public class Evento implements Agendavel {
 		this.atividades = atividades;
 	}
 
-	public List<Descontavel> getDescontaveis() {
+	public List<Cupom> getDescontaveis() {
 		return cupons;
 	}
 
-	public void setDescontaveis(List<Descontavel> descontaveis) {
+	public void setDescontaveis(List<Cupom> descontaveis) {
 		this.cupons = descontaveis;
 	}
 

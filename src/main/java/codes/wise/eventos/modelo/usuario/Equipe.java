@@ -12,6 +12,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 import codes.wise.eventos.modelo.excecoes.MembroJaExisteNaListaDeMembros;
 import codes.wise.eventos.modelo.excecoes.MembroNaoExisteNaListaDeMembrosException;
@@ -28,6 +29,9 @@ public abstract class Equipe<E> implements Time<E> {
 	@OneToOne
 	private E principal;
 	
+	public Equipe() {
+		this.membros = Lists.newArrayList();
+	}
 	/**
 	 * Adiciona membros à equipe. O primeiro membro é automaticamente definido 
 	 * como principal.

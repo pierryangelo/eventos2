@@ -13,6 +13,13 @@
         <!-- Aqui são listadas todas as entidades -->
         <class>codes.wise.eventos.modelo.atividade.Atividade</class>
         <class>codes.wise.eventos.modelo.usuario.Responsavel</class>
+        <class>codes.wise.eventos.modelo.usuario.Equipe</class>
+        <class>codes.wise.eventos.modelo.usuario.Usuario</class>
+        <class>codes.wise.eventos.modelo.usuario.Pessoa</class>
+        <class>codes.wise.eventos.modelo.usuario.EquipeOrganizadora</class>
+        <class>codes.wise.eventos.modelo.usuario.EquipeResponsavel</class>
+        <class>codes.wise.eventos.modelo.usuario.Organizacao</class>
+        <class>codes.wise.eventos.modelo.usuario.Participacao</class>
 
         <properties>    
             <!-- Propriedades JDBC -->

@@ -3,13 +3,20 @@ package codes.wise.eventos.modelo.inscricao;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import codes.wise.eventos.modelo.excecoes.ItemSimplesJaExisteNaListaDeItensCompostos;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
+@Entity
+@PrimaryKeyJoinColumn(name="id")
 public class ItemComposto extends Item {
+	@ElementCollection
 	public List<ItemSimples> itens;
 	public String descricao;
 	public BigDecimal desconto;

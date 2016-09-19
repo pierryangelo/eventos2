@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import codes.wise.eventos.modelo.cupom.Cupom;
 import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.EventoNaoContemCupomException;
@@ -26,7 +27,7 @@ public class Inscricao {
 	@ElementCollection
 	private List<Item> carrinho;
 	@ElementCollection
-	private List<Descontavel> cupons;
+	private List<Cupom> cupons;
 	@ManyToOne
 	private Evento evento;
 
@@ -50,7 +51,7 @@ public class Inscricao {
 		return BigDecimalUtil.paraMonetario(total);
 	}
 	
-	public void adicionarCupom(Descontavel cupom) 
+	public void adicionarCupom(Cupom cupom) 
 			throws EventoNaoContemCupomException {
 		if (!this.evento.getDescontaveis().contains(cupom)) {
 			throw new EventoNaoContemCupomException();
@@ -105,7 +106,7 @@ public class Inscricao {
 		return ImmutableList.copyOf(cupons);
 	}
 
-	public void setCupons(List<Descontavel> cupons) {
+	public void setCupons(List<Cupom> cupons) {
 		this.cupons = cupons;
 	}
 
