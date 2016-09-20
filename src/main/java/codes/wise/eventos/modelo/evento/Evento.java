@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -29,6 +30,8 @@ import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.JaExisteEspacoFisicoAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
+import codes.wise.eventos.modelo.inscricao.ItemComposto;
+import codes.wise.eventos.modelo.inscricao.ItemSimples;
 import codes.wise.eventos.modelo.usuario.Usuario;
 
 @Entity
@@ -125,6 +128,36 @@ public class Evento {
 	 */
 	public String getAgendaEspacoFisico(EspacoFisico espacoFisico) {
 		return new Agenda(this).getAgendaPorEspacoFisico(espacoFisico);
+	}
+	
+	/**
+	 * Retorna os usuários inscritos em determinada atividade, para isso, percorre a lista de
+	 * inscricoes verificando as atividades de cada item, através dessas, o usuário.
+	 * @param atividade
+	 * @return List<Usuario>
+	 */
+	public List<Usuario> getInscritosPorAtividade(Atividade atividade) {
+		List<Usuario> inscritos = Lists.newArrayList();
+		this.inscricoes.forEach(inscricao -> {
+			inscricao.getCarrinho().forEach(item -> {
+				if (item instanceof ItemSimples) {
+					if (((ItemSimples) item).getAtividade().equals(atividade)) {
+						inscritos.add(inscricao.getParticipacao().getUsuario());
+					}
+				} else if (item instanceof ItemComposto) {
+					((ItemComposto) item).getItens().forEach(itemSimples -> {
+						if (itemSimples.getAtividade().equals(atividade)) {
+							inscritos.add(inscricao.getParticipacao().getUsuario());
+						}
+					});
+				}
+			});
+		});
+		return ImmutableList.copyOf(inscritos);
+	}
+	
+	public List<Usuario> getInscritosPorEspacoFisico(EspacoFisico espacoFisico) {
+		return null;
 	}
 	
 	public Integer getId() {

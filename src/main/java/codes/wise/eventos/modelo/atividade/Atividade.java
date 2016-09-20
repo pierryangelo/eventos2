@@ -89,7 +89,7 @@ public class Atividade {
 		this.tipoDeAtividade = tipoDeAtividade;
 	}
 	
-	public Boolean getIsPaga() {
+	public Boolean isPaga() {
 		return isPaga;
 	}
 	

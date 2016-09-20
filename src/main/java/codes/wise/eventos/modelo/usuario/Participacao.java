@@ -46,4 +46,20 @@ public class Participacao {
 	public void setTipoDeParticipante(TipoDeParticipante tipoDeParticipante) {
 		this.tipoDeParticipante = tipoDeParticipante;
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 }

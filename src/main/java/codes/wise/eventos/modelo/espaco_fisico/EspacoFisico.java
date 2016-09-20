@@ -45,7 +45,6 @@ public class EspacoFisico {
 	private TipoDeEspacoFisico tipoDeEspacoFisico;
 	@OneToMany(mappedBy="espacoFisicoPai")
 	private List<EspacoFisico> espacosFisicosFilhos;
-	
 	@ElementCollection
 	private List<Horario> horarios;
 

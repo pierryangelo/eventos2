@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -25,15 +24,16 @@ import codes.wise.eventos.modelo.util.BigDecimalUtil;
 @Entity
 public class Inscricao {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	@OneToMany(mappedBy="inscricao")
-	private List<Item> carrinho;
-	@Transient
-	private List<Cupom> cupons;
+	private Integer id;
 	@OneToOne
 	private Evento evento;
 	@OneToOne
 	private Participacao participacao;
+	@OneToMany
+	private List<Cupom> cupons;
+	
+	@OneToMany(mappedBy="inscricao")
+	private List<Item> carrinho;
 
 	public Inscricao() {
 		this.carrinho = Lists.newArrayList();
@@ -45,6 +45,7 @@ public class Inscricao {
 		if (this.carrinho.contains(item)) {
 			throw new ItemJaAdicionadoAoCarrinhoException();
 		}
+		
 		this.carrinho.add(item);
 	}
 	
@@ -90,11 +91,11 @@ public class Inscricao {
 		return BigDecimalUtil.paraMonetario(desconto);
 	}
 	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
