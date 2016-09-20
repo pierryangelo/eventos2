@@ -24,7 +24,6 @@ import codes.wise.eventos.modelo.cupom.Cupom;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
-import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
@@ -116,8 +115,17 @@ public class Evento implements Agendavel {
 	 * Retorna agenda do evento ordenada por data de início das atividades.
 	 * @return String
 	 */
-	public String getAgenda() {
-		return Agenda.getAgendaOrdemCrescente(atividades);
+	public String getAgendaAtividades() {
+		return new Agenda(this).getAgendaOrdemCrescente();
+	}
+	
+	/**
+	 * Retorna agenda por espaço físico ordenada por data de início das atividades.
+	 * @param espacoFisico
+	 * @return String
+	 */
+	public String getAgendaEspacoFisico(EspacoFisico espacoFisico) {
+		return new Agenda(this).getAgendaPorEspacoFisico(espacoFisico);
 	}
 	
 	public Integer getId() {

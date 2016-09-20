@@ -16,7 +16,6 @@ import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
-import codes.wise.eventos.modelo.excecoes.NaoHaHorarioDisponivelNoEspacoFisicoException;
 import codes.wise.eventos.modelo.usuario.Equipe;
 import codes.wise.eventos.modelo.usuario.Responsavel;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;

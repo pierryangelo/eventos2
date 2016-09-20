@@ -31,7 +31,7 @@ import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeExcep
 public class EspacoFisico {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	@ManyToOne
+	@OneToOne
 	private EspacoFisico espacoFisicoPai;
 	@OneToOne
 	private Evento evento;
@@ -44,7 +44,7 @@ public class EspacoFisico {
 	private Integer capacidade;
 	@Enumerated(EnumType.STRING)
 	private TipoDeEspacoFisico tipoDeEspacoFisico;
-	@OneToMany
+	@OneToMany(mappedBy="espacoFisicoPai")
 	private List<EspacoFisico> espacosFisicosFilhos;
 	
 	@ElementCollection
