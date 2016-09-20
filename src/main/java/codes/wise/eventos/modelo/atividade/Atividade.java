@@ -15,6 +15,7 @@ import javax.persistence.OneToOne;
 import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
+import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.NaoHaHorarioDisponivelNoEspacoFisicoException;
 import codes.wise.eventos.modelo.usuario.Equipe;
 import codes.wise.eventos.modelo.usuario.Responsavel;
@@ -77,13 +78,9 @@ public class Atividade implements Agendavel {
 	}
 	
 	public void setEspacoFisico(EspacoFisico espacoFisico) 
-			throws NaoHaHorarioDisponivelNoEspacoFisicoException {
-		for (EspacoFisico espaco : this.evento.getEspacosFisicos()) {
-			if (!espaco.isHorarioDisponivel(this.inicio, this.termino)) {
-				throw new NaoHaHorarioDisponivelNoEspacoFisicoException();
-			}
-		}
-		this.espacoFisico = espacoFisico;
+			throws HorarioJaOcupadoPorOutraAtividadeException {
+		espacoFisico.setAtividade(this);
+		this.setEspacoFisico(espacoFisico);
 	}
 	
 	public TipoDeAtividade getTipoDeAtividade() {

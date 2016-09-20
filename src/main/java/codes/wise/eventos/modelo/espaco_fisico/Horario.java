@@ -2,6 +2,8 @@ package codes.wise.eventos.modelo.espaco_fisico;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Embeddable;
+@Embeddable
 public class Horario {
 	private LocalDateTime inicio;
 	private LocalDateTime termino;

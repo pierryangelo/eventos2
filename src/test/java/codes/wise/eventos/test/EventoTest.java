@@ -9,6 +9,7 @@ import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
 import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
+import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 
 public class EventoTest {
@@ -29,11 +30,11 @@ public class EventoTest {
 	@Test(expected=JaExisteAtividadeAdicionadaException.class)
 	public void naoAceitaAtividadesRepetidas() 
 			throws JaExisteAtividadeAdicionadaException, 
-			HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
+			HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException, HorarioJaOcupadoPorOutraAtividadeException {
 		a1.setId(1);
 		a2.setId(1);
-		e1.adicionaAtividade(a1, ep1);
-		e1.adicionaAtividade(a2, ep2);
+		e1.adicionaAtividade(a1);
+		e1.adicionaAtividade(a2);
 	}
 	
 	@Test(expected=EventoSateliteJaAdicionadoException.class)

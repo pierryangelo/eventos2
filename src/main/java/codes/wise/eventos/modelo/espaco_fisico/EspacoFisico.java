@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -35,6 +36,7 @@ public class EspacoFisico {
 	private String endereco;
 	private String descricao;
 	private LatLng localizacao;
+	@OneToOne
 	private Atividade atividade;
 	private Integer capacidade;
 	@Enumerated(EnumType.STRING)
