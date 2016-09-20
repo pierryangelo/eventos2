@@ -14,17 +14,14 @@ import codes.wise.eventos.modelo.excecoes.NaoExisteAtividadeNaListaDeAtividadesD
 public class ItemSimples extends Item {
 	@OneToOne
 	private Atividade atividade;
-	@OneToOne
-	private Evento evento;
-	
-	public ItemSimples(BigDecimal preco, Atividade atividade, Evento evento) 
+
+	public ItemSimples(BigDecimal preco, Atividade atividade) 
 			throws NaoExisteAtividadeNaListaDeAtividadesDoEventoException {
 		super(preco);
-		if (!existeAtividadeNoEvento()) {
+		if (!existeAtividadeNoEvento(atividade.getEvento())) {
 			throw new NaoExisteAtividadeNaListaDeAtividadesDoEventoException();
 		}
 		this.atividade = atividade;
-		this.evento = evento;
 	}
 
 	public Atividade getAtividade() {
@@ -35,7 +32,7 @@ public class ItemSimples extends Item {
 		this.atividade = atividade;
 	}
 	
-	private boolean existeAtividadeNoEvento() {
+	private boolean existeAtividadeNoEvento(Evento evento) {
 		return evento.getAtividades().contains(atividade);
 	}
 }
