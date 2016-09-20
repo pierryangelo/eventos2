@@ -46,11 +46,11 @@ public class Evento implements Agendavel {
 	@Enumerated(EnumType.STRING)
 	private TipoDeEvento tipo;
 	private StatusDoEvento status;
-	@OneToMany
+	@OneToMany(mappedBy="evento")
 	private List<Atividade> atividades;
-	@ElementCollection
-	private List<Cupom> cupons;
 	@OneToMany
+	private List<Cupom> cupons;
+	@OneToMany(mappedBy="evento")
 	private List<EspacoFisico> espacosFisicos;
 	@ElementCollection
 	private List<Evento> eventosSatelites;

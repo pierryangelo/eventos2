@@ -25,7 +25,7 @@ import codes.wise.eventos.modelo.util.BigDecimalUtil;
 public class Atividade implements Agendavel {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	@ManyToOne
+	@OneToOne
 	private Evento evento;
 	private String nome;
 	private LocalDateTime inicio;
@@ -80,7 +80,7 @@ public class Atividade implements Agendavel {
 	public void setEspacoFisico(EspacoFisico espacoFisico) 
 			throws HorarioJaOcupadoPorOutraAtividadeException {
 		espacoFisico.setAtividade(this);
-		this.setEspacoFisico(espacoFisico);
+		this.espacoFisico = espacoFisico;
 	}
 	
 	public TipoDeAtividade getTipoDeAtividade() {

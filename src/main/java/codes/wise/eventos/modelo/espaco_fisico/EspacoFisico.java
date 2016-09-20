@@ -22,6 +22,7 @@ import com.google.common.collect.Lists;
 import com.javadocmd.simplelatlng.LatLng;
 
 import codes.wise.eventos.modelo.atividade.Atividade;
+import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
 import codes.wise.eventos.modelo.excecoes.EspacosFisicosComLocalizacoesIguaisException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;;
@@ -32,11 +33,13 @@ public class EspacoFisico {
 	private Integer id;
 	@ManyToOne
 	private EspacoFisico espacoFisicoPai;
+	@OneToOne
+	private Evento evento;
 	private String nome;
 	private String endereco;
 	private String descricao;
 	private LatLng localizacao;
-	@OneToOne
+	@OneToOne(mappedBy="espacoFisico")
 	private Atividade atividade;
 	private Integer capacidade;
 	@Enumerated(EnumType.STRING)
@@ -54,10 +57,10 @@ public class EspacoFisico {
 
 	public void setAtividade(Atividade atividade) 
 			throws HorarioJaOcupadoPorOutraAtividadeException {
-		if (this.isHorarioDisponivel(atividade.getInicio(), atividade.getTermino())) {
-			this.atividade = atividade;
+		if (!this.isHorarioDisponivel(atividade.getInicio(), atividade.getTermino())) {
+			throw new HorarioJaOcupadoPorOutraAtividadeException();
 		}
-		throw new HorarioJaOcupadoPorOutraAtividadeException();
+		this.atividade = atividade;
 	}
 	
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) throws 
