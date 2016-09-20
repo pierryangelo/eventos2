@@ -3,58 +3,59 @@ package codes.wise.eventos.modelo.espaco_fisico;
 import static codes.wise.eventos.modelo.util.TimeUtil.verificaConflitoDeHorarios;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.javadocmd.simplelatlng.LatLng;
 
-import codes.wise.eventos.modelo.agenda.Agenda;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
 import codes.wise.eventos.modelo.excecoes.EspacosFisicosComLocalizacoesIguaisException;
-import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;;
+import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;;
 
 @Entity
 public class EspacoFisico {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	@OneToOne
+	@ManyToOne
 	private EspacoFisico espacoFisicoPai;
 	private String nome;
 	private String endereco;
 	private String descricao;
 	private LatLng localizacao;
-	// to do: fazer teste da capacidade
+	private Atividade atividade;
 	private Integer capacidade;
+	@Enumerated(EnumType.STRING)
 	private TipoDeEspacoFisico tipoDeEspacoFisico;
 	@OneToMany
-	private List<Atividade> atividades;
-	@OneToMany
 	private List<EspacoFisico> espacosFisicosFilhos;
+	
+	@ElementCollection
+	private List<Horario> horarios;
 
 	public EspacoFisico() {
-		this.atividades = Lists.newArrayList();
+		this.horarios = Lists.newArrayList();
 		this.espacosFisicosFilhos = Lists.newArrayList();
 	}
-	
-	public void adicionaAtividade(Atividade atividade) 
-			throws HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
-		for (Atividade a : atividades) {
-			if (verificaConflitoDeHorarios(a.getInicio(), a.getTermino(), 
-					atividade.getInicio(), atividade.getTermino())) {
-				throw new HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException();
-			}
+
+	public void setAtividade(Atividade atividade) 
+			throws HorarioJaOcupadoPorOutraAtividadeException {
+		if (this.isHorarioDisponivel(atividade.getInicio(), atividade.getTermino())) {
+			this.atividade = atividade;
 		}
-		atividade.setEspacoFisico(this);
-		this.atividades.add(atividade);
+		throw new HorarioJaOcupadoPorOutraAtividadeException();
 	}
 	
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) throws 
@@ -71,8 +72,13 @@ public class EspacoFisico {
 		this.espacosFisicosFilhos.add(espacoFisico);
 	}
 	
-	public String getAgenda() {
-		return Agenda.getAgendaOrdemCrescente(atividades);
+	public boolean isHorarioDisponivel(LocalDateTime inicio, LocalDateTime termino) {
+		for (Horario horario : this.horarios) {
+			if (verificaConflitoDeHorarios(horario.getInicio(), horario.getTermino(), inicio, termino)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public EspacoFisico getEspacoFisicoPai() {
@@ -115,14 +121,6 @@ public class EspacoFisico {
 		this.tipoDeEspacoFisico = tipoDeEspacoFisico;
 	}
 	
-	public List<Atividade> getAtividades() {
-		return atividades;
-	}
-	
-	public void setAtividades(List<Atividade> atividades) {
-		this.atividades = atividades;
-	}
-	
 	public List<EspacoFisico> getEspacosFisicosFilhos() {
 		return ImmutableList.copyOf(espacosFisicosFilhos);
 	}
@@ -153,6 +151,18 @@ public class EspacoFisico {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public List<Horario> getHorarios() {
+		return horarios;
+	}
+
+	public void setHorarios(List<Horario> horarios) {
+		this.horarios = horarios;
+	}
+
+	public Atividade getAtividade() {
+		return atividade;
 	}
 
 }

@@ -6,8 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import codes.wise.eventos.modelo.atividade.Atividade;
-
 @Entity
 public class Responsavel {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)

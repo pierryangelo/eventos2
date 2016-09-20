@@ -26,4 +26,8 @@ public class InscricaoBuilder {
 		this.inscricao.setCupons(cupons);
 		return this;
 	}
+	
+	public Inscricao getInscricao() {
+		return this.inscricao;
+	}
 }

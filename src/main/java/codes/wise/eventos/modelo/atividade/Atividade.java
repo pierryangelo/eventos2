@@ -9,26 +9,27 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
+import codes.wise.eventos.modelo.excecoes.NaoHaHorarioDisponivelNoEspacoFisicoException;
 import codes.wise.eventos.modelo.usuario.Equipe;
 import codes.wise.eventos.modelo.usuario.Responsavel;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 @Entity
 public class Atividade implements Agendavel {
-
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	@OneToOne
+	@ManyToOne
 	private Evento evento;
 	private String nome;
 	private LocalDateTime inicio;
 	private LocalDateTime termino;
-	@OneToOne
+	@ManyToOne
 	private EspacoFisico espacoFisico;
 	@Enumerated(EnumType.STRING)
 	private TipoDeAtividade tipoDeAtividade;
@@ -75,7 +76,13 @@ public class Atividade implements Agendavel {
 		return espacoFisico;
 	}
 	
-	public void setEspacoFisico(EspacoFisico espacoFisico) {
+	public void setEspacoFisico(EspacoFisico espacoFisico) 
+			throws NaoHaHorarioDisponivelNoEspacoFisicoException {
+		for (EspacoFisico espaco : this.evento.getEspacosFisicos()) {
+			if (!espaco.isHorarioDisponivel(this.inicio, this.termino)) {
+				throw new NaoHaHorarioDisponivelNoEspacoFisicoException();
+			}
+		}
 		this.espacoFisico = espacoFisico;
 	}
 	

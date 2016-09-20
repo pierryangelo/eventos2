@@ -1,6 +1,8 @@
 package codes.wise.eventos.modelo.usuario;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +18,7 @@ public class Participacao {
 	private Usuario usuario;
 	@OneToOne
 	private Inscricao inscricao;
+	@Enumerated(EnumType.STRING)
 	private TipoDeParticipante tipoDeParticipante;
 	
 	public Participacao() {

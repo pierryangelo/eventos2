@@ -25,6 +25,7 @@ import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
 import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
+import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.JaExisteEspacoFisicoAdicionadoException;
@@ -94,14 +95,12 @@ public class Evento implements Agendavel {
 		this.checkins.add(usuario);
 	}
 	
-	// to do: hashCode e equals
-	public void adicionaAtividade(Atividade atividade, EspacoFisico espacoFisico) 
-			throws JaExisteAtividadeAdicionadaException, 
-			HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
+	// to do: hashCode e equals para comparar atividades
+	public void adicionaAtividade(Atividade atividade) 
+			throws JaExisteAtividadeAdicionadaException, HorarioJaOcupadoPorOutraAtividadeException {
 		if (this.atividades.contains(atividade)) {
 			throw new JaExisteAtividadeAdicionadaException();
 		}
-		espacoFisico.adicionaAtividade(atividade);
 		this.atividades.add(atividade);
 	}
 	
@@ -199,5 +198,45 @@ public class Evento implements Agendavel {
 
 	public void setEventoPai(Evento eventoPai) {
 		this.eventoPai = eventoPai;
+	}
+
+	public List<Cupom> getCupons() {
+		return cupons;
+	}
+
+	public void setCupons(List<Cupom> cupons) {
+		this.cupons = cupons;
+	}
+
+	public List<EspacoFisico> getEspacosFisicos() {
+		return espacosFisicos;
+	}
+
+	public void setEspacosFisicos(List<EspacoFisico> espacosFisicos) {
+		this.espacosFisicos = espacosFisicos;
+	}
+
+	public List<Evento> getEventosSatelites() {
+		return eventosSatelites;
+	}
+
+	public void setEventosSatelites(List<Evento> eventosSatelites) {
+		this.eventosSatelites = eventosSatelites;
+	}
+
+	public Set<Usuario> getCheckins() {
+		return checkins;
+	}
+
+	public void setCheckins(Set<Usuario> checkins) {
+		this.checkins = checkins;
+	}
+
+	public List<Inscricao> getInscricoes() {
+		return inscricoes;
+	}
+
+	public void setInscricoes(List<Inscricao> inscricoes) {
+		this.inscricoes = inscricoes;
 	}
 }
