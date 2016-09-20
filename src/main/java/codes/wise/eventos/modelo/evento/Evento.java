@@ -18,7 +18,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import codes.wise.eventos.modelo.agenda.Agenda;
-import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.cupom.Cupom;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
@@ -33,7 +32,7 @@ import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.usuario.Usuario;
 
 @Entity
-public class Evento implements Agendavel {
+public class Evento {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
@@ -51,11 +50,11 @@ public class Evento implements Agendavel {
 	private List<Cupom> cupons;
 	@OneToMany(mappedBy="evento")
 	private List<EspacoFisico> espacosFisicos;
-	@ElementCollection
+	@OneToMany(mappedBy="eventoPai")
 	private List<Evento> eventosSatelites;
 	@ElementCollection
 	private Set<Usuario> checkins;
-	@ElementCollection
+	@OneToMany(mappedBy="evento")
 	private List<Inscricao> inscricoes;
 	
 	public Evento() {

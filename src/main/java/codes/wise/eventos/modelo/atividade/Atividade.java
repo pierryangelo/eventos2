@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
@@ -21,7 +20,7 @@ import codes.wise.eventos.modelo.usuario.Responsavel;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 @Entity
-public class Atividade implements Agendavel {
+public class Atividade {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne

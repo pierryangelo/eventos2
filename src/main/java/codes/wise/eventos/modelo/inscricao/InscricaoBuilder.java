@@ -4,6 +4,7 @@ import java.util.List;
 
 import codes.wise.eventos.modelo.cupom.Cupom;
 import codes.wise.eventos.modelo.evento.Evento;
+import codes.wise.eventos.modelo.usuario.Participacao;
 
 public class InscricaoBuilder {
 	private Inscricao inscricao;
@@ -26,7 +27,10 @@ public class InscricaoBuilder {
 		this.inscricao.setCupons(cupons);
 		return this;
 	}
-	
+	public InscricaoBuilder comParticipacao(Participacao participacao) {
+		this.inscricao.setParticipacao(participacao);
+		return this;
+	}
 	public Inscricao getInscricao() {
 		return this.inscricao;
 	}

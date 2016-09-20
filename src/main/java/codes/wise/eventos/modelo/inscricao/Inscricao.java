@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -18,6 +18,7 @@ import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.EventoNaoContemCupomException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
+import codes.wise.eventos.modelo.usuario.Participacao;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 @Entity
@@ -28,8 +29,10 @@ public class Inscricao {
 	private List<Item> carrinho;
 	@ElementCollection
 	private List<Cupom> cupons;
-	@ManyToOne
+	@OneToOne
 	private Evento evento;
+	@OneToOne
+	private Participacao participacao;
 
 	public Inscricao() {
 		this.carrinho = Lists.newArrayList();
@@ -116,5 +119,13 @@ public class Inscricao {
 
 	public void setEvento(Evento evento) {
 		this.evento = evento;
+	}
+
+	public Participacao getParticipacao() {
+		return participacao;
+	}
+
+	public void setParticipacao(Participacao participacao) {
+		this.participacao = participacao;
 	}
 }

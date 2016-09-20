@@ -3,8 +3,8 @@ package codes.wise.eventos.modelo.inscricao;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 import com.google.common.collect.ImmutableList;
@@ -16,7 +16,7 @@ import codes.wise.eventos.modelo.util.BigDecimalUtil;
 @Entity
 @PrimaryKeyJoinColumn(name="id")
 public class ItemComposto extends Item {
-	@ElementCollection
+	@OneToMany(mappedBy="id")
 	public List<ItemSimples> itens;
 	public String descricao;
 	public BigDecimal desconto;
