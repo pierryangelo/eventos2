@@ -153,11 +153,34 @@ public class Evento {
 				}
 			});
 		});
+		
 		return ImmutableList.copyOf(inscritos);
 	}
 	
+	/**
+	 * Retorna os usuários inscritos em determinado espaco físico, para isso, percorre a lista de
+	 * inscricoes verificando os espaços físicos de cada atividade.
+	 * @param espacoFisico
+	 * @return List<Usuario>
+	 */
 	public List<Usuario> getInscritosPorEspacoFisico(EspacoFisico espacoFisico) {
-		return null;
+		List<Usuario> inscritos = Lists.newArrayList();
+		this.inscricoes.forEach(inscricao -> {
+			inscricao.getCarrinho().forEach(item -> {
+				if (item instanceof ItemSimples) {
+					if (((ItemSimples) item).getAtividade().getEspacoFisico().equals(espacoFisico)) {
+						inscritos.add(inscricao.getParticipacao().getUsuario());
+					}
+				} else if (item instanceof ItemComposto) {
+					((ItemComposto) item).getItens().forEach(itemSimples -> {
+						if (itemSimples.getAtividade().getEspacoFisico().equals(espacoFisico)) {
+							inscritos.add(inscricao.getParticipacao().getUsuario());
+						}
+					});
+				}
+			});
+		});
+		return ImmutableList.copyOf(inscritos);
 	}
 	
 	public Integer getId() {
