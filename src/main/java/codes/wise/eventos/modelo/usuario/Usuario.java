@@ -24,6 +24,8 @@ public class Usuario {
 	private String password; 
 	private Boolean isAtivo;
 	@OneToOne
+	private EquipeOrganizadora equipeOrganizadora;
+	@OneToOne
 	private Pessoa pessoa;
 
 	@OneToMany(mappedBy="usuario")

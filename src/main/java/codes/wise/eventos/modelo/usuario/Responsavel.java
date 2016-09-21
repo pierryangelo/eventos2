@@ -11,7 +11,7 @@ public class Responsavel {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
-	private EquipeResponsavel equipe;
+	private EquipeResponsavel equipeResponsavel;
 	@OneToOne
 	private Usuario usuario;
 	private String curriculo;
@@ -44,4 +44,17 @@ public class Responsavel {
 	public void setCurriculo(String curriculo) {
 		this.curriculo = curriculo;
 	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	public EquipeResponsavel getEquipeResponsavel() {
+		return equipeResponsavel;
+	}
+
+	public void setEquipeResponsavel(EquipeResponsavel equipeResponsavel) {
+		this.equipeResponsavel = equipeResponsavel;
+	}
+
 }

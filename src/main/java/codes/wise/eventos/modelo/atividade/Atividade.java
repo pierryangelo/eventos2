@@ -15,8 +15,7 @@ import javax.persistence.OneToOne;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
-import codes.wise.eventos.modelo.usuario.Equipe;
-import codes.wise.eventos.modelo.usuario.Responsavel;
+import codes.wise.eventos.modelo.usuario.EquipeResponsavel;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 @Entity
@@ -33,7 +32,7 @@ public class Atividade {
 	@Enumerated(EnumType.STRING)
 	private TipoDeAtividade tipoDeAtividade;
 	@OneToOne
-	private Equipe<Responsavel> equipeResponsavel;
+	private EquipeResponsavel equipeResponsavel;
 	private BigDecimal valor;
 	private Boolean isPaga;
 	
@@ -97,11 +96,11 @@ public class Atividade {
 		this.isPaga = isPaga;
 	}
 	
-	public Equipe<Responsavel> getEquipeResponsavel() {
+	public EquipeResponsavel	 getEquipeResponsavel() {
 		return equipeResponsavel;
 	}
 
-	public void setEquipeResponsavel(Equipe<Responsavel> equipeResponsavel) {
+	public void setEquipeResponsavel(EquipeResponsavel equipeResponsavel) {
 		this.equipeResponsavel = equipeResponsavel;
 	}
 
