@@ -16,6 +16,7 @@ import codes.wise.eventos.modelo.dao.EquipeResponsavelDAO;
 import codes.wise.eventos.modelo.dao.EspacoFisicoDAO;
 import codes.wise.eventos.modelo.dao.EventoDAO;
 import codes.wise.eventos.modelo.dao.InscricaoDAO;
+import codes.wise.eventos.modelo.dao.ItemDAO;
 import codes.wise.eventos.modelo.dao.OrganizacaoDAO;
 import codes.wise.eventos.modelo.dao.ParticipacaoDAO;
 import codes.wise.eventos.modelo.dao.PessoaDAO;
@@ -26,10 +27,18 @@ import codes.wise.eventos.modelo.espaco_fisico.EspacoFisicoBuilder;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
 import codes.wise.eventos.modelo.evento.TipoDeEvento;
+import codes.wise.eventos.modelo.excecoes.AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
+import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
+import codes.wise.eventos.modelo.excecoes.ItemSimplesJaExisteNaListaDeItensCompostos;
+import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.MembroJaExisteNaListaDeMembros;
+import codes.wise.eventos.modelo.excecoes.NaoExisteAtividadeNaListaDeAtividadesDoEventoException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
+import codes.wise.eventos.modelo.inscricao.Item;
+import codes.wise.eventos.modelo.inscricao.ItemComposto;
+import codes.wise.eventos.modelo.inscricao.ItemSimples;
 import codes.wise.eventos.modelo.usuario.EquipeOrganizadora;
 import codes.wise.eventos.modelo.usuario.EquipeResponsavel;
 import codes.wise.eventos.modelo.usuario.Organizacao;
@@ -41,7 +50,7 @@ import codes.wise.eventos.modelo.usuario.Usuario;
 import codes.wise.eventos.modelo.usuario.UsuarioBuilder;
 
 public class Teste {
-	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros, HorarioJaOcupadoPorOutraAtividadeException, InscricaoJaExisteException{
+	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros, HorarioJaOcupadoPorOutraAtividadeException, InscricaoJaExisteException, ItemSimplesJaExisteNaListaDeItensCompostos, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, ItemJaAdicionadoAoCarrinhoException, JaExisteAtividadeAdicionadaException{
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("eventos");
 		EntityManager em = emf.createEntityManager();
 		
@@ -56,7 +65,8 @@ public class Teste {
 		ParticipacaoDAO participacaoDao = new ParticipacaoDAO(em);
 		InscricaoDAO inscricaoDao = new InscricaoDAO(em);
 		OrganizacaoDAO organizacaoDao = new OrganizacaoDAO(em);
-		
+		ItemDAO itemDao = new ItemDAO(em);
+
 		Evento evento = new EventoBuilder()
 				.comNome("INFOTECH")
 				.comDescricao("Semana de Tecnologia do IFPI")
@@ -103,6 +113,7 @@ public class Teste {
 		organizacao.setEquipeOrganizadora(equipeOrganizadora);
 		organizacao.setEvento(evento);
 		organizacao.setUsuario(usuario1);
+		participacao.setEquipeResponsavel(equipeResponsavel);
 		
 		EspacoFisico espacoFisico = new EspacoFisicoBuilder()
 		.comCapacidade(30)
@@ -111,13 +122,34 @@ public class Teste {
 		.deNome("Sala B")
 		.getEspacoFisico();
 		
-		Atividade atividade = new AtividadeBuilder()
+		
+		// verificar passar valor no construtor do item
+		Atividade atividade1 = new AtividadeBuilder()
 				.comNome("CursoJPA")
 				.comValor(new BigDecimal(100))
 				.deTipo(TipoDeAtividade.PALESTRA)
 				.comEquipeResponsavel(equipeResponsavel)
 				.noEspacoFisico(espacoFisico)
+				.isPaga(true)
+				.doEvento(evento)
 				.getAtividade();
+		
+		Atividade atividade2 = new AtividadeBuilder()
+				.comNome("Curso de Swift")
+				.comValor(new BigDecimal(100))
+				.deTipo(TipoDeAtividade.MINICURSO)
+				.comInicio(LocalDateTime.now())
+				.comEquipeResponsavel(equipeResponsavel)
+				.isPaga(true)
+				.doEvento(evento)
+				.getAtividade();
+		
+		ItemSimples itemSimples1 = new ItemSimples(atividade1, inscricao);
+		ItemSimples itemSimples2 = new ItemSimples(atividade2, inscricao);
+
+		ItemComposto itemComposto = new ItemComposto("Kit de Atividade", new BigDecimal("0.10"));
+		itemComposto.adicionarItem(itemSimples1);
+		itemComposto.adicionarItem(itemSimples2);
 		
 		em.getTransaction().begin();
 		eventoDao.adiciona(evento);
@@ -134,10 +166,15 @@ public class Teste {
 		organizacaoDao.adiciona(organizacao);
 		inscricaoDao.adiciona(inscricao);
 		espacoFisicoDao.adiciona(espacoFisico);
-		atividadeDao.adiciona(atividade);
+		atividadeDao.adiciona(atividade1);
+		atividadeDao.adiciona(atividade2);
+		itemDao.adiciona(itemSimples1);
+		itemDao.adiciona(itemSimples2);
+		itemDao.adiciona(itemComposto);
+		inscricao.adicionarItem(itemComposto);
 		em.getTransaction().commit();
 		em.close();
 		
-
+		System.out.println(itemComposto.getPreco().toString());
 	}
 }

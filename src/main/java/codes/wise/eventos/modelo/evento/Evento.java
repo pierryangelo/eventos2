@@ -105,6 +105,46 @@ public class Evento {
 		this.atividades.add(atividade);
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((eventoPai == null) ? 0 : eventoPai.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Evento))
+			return false;
+		Evento other = (Evento) obj;
+		if (eventoPai == null) {
+			if (other.eventoPai != null)
+				return false;
+		} else if (!eventoPai.equals(other.eventoPai))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		if (tipo != other.tipo)
+			return false;
+		return true;
+	}
+
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) 
 			throws JaExisteEspacoFisicoAdicionadoException {
 		if (this.espacosFisicos.contains(espacoFisico)) {

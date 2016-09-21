@@ -2,42 +2,66 @@ package codes.wise.eventos.modelo.inscricao;
 
 import java.math.BigDecimal;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException;
 import codes.wise.eventos.modelo.excecoes.NaoExisteAtividadeNaListaDeAtividadesDoEventoException;
 @Entity
-@PrimaryKeyJoinColumn(name="id")
+@DiscriminatorValue("S")
 public class ItemSimples extends Item {
 	@OneToOne
 	private Atividade atividade;
 
-	public ItemSimples(BigDecimal preco, Atividade atividade) 
+	public ItemSimples(Atividade atividade, Inscricao inscricao) 
 			throws NaoExisteAtividadeNaListaDeAtividadesDoEventoException, 
 			AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException {
-		super(preco);
-		if (!existeAtividadeNoEvento(atividade.getEvento())) {
-			throw new NaoExisteAtividadeNaListaDeAtividadesDoEventoException();
-		}
+		atividadePertenceAoEventoDaInscricao(inscricao.getEvento(), atividade);
+		isAtividadePaga(atividade);
+		this.atividade = atividade;
+		this.inscricao = inscricao;
+	}
+
+	private void isAtividadePaga(Atividade atividade) 
+			throws AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException {
 		if (!atividade.isPaga()) {
 			throw new AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException();
 		}
-		this.atividade = atividade;
+	}
+	
+	private void atividadePertenceAoEventoDaInscricao(Evento evento, Atividade atividade) 
+			throws NaoExisteAtividadeNaListaDeAtividadesDoEventoException {
+		if (!evento.getAtividades().contains(atividade)) {
+			throw new NaoExisteAtividadeNaListaDeAtividadesDoEventoException();
+		}
 	}
 
-	public Atividade getAtividade() {
-		return atividade;
-	}
-
-	public void setAtividade(Atividade atividade) {
+	public void setAtividade(Atividade atividade) 
+			throws AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, 
+			NaoExisteAtividadeNaListaDeAtividadesDoEventoException {
+		isAtividadePaga(atividade);
+		atividadePertenceAoEventoDaInscricao(this.inscricao.getEvento(), atividade);
 		this.atividade = atividade;
 	}
 	
-	private boolean existeAtividadeNoEvento(Evento evento) {
-		return evento.getAtividades().contains(atividade);
+	public Atividade getAtividade() {
+		return atividade;
+	}
+	
+	public String getDescricao() {
+		return this.atividade.getNome();
+	}
+
+	@Override
+	public BigDecimal getPreco() {
+		return atividade.getValor();
+	}
+	
+	@Override
+	public String toString() {
+		return this.getDescricao();
 	}
 }

@@ -20,6 +20,9 @@ public class Participacao {
 	private Inscricao inscricao;
 	@Enumerated(EnumType.STRING)
 	private TipoDeParticipante tipoDeParticipante;
+	@OneToOne
+	private EquipeResponsavel equipeResponsavel;
+	
 	
 	public Participacao() {
 		
@@ -61,4 +64,13 @@ public class Participacao {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
+	
+	public EquipeResponsavel getEquipeResponsavel() {
+		return equipeResponsavel;
+	}
+
+	public void setEquipeResponsavel(EquipeResponsavel equipeResponsavel) {
+		this.equipeResponsavel = equipeResponsavel;
+	}
+
 }

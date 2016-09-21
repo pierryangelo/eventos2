@@ -3,33 +3,50 @@ package codes.wise.eventos.modelo.inscricao;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import codes.wise.eventos.modelo.excecoes.DescontoDoItemCompostoNaoPodeSerNegativoException;
 import codes.wise.eventos.modelo.excecoes.ItemSimplesJaExisteNaListaDeItensCompostos;
+import codes.wise.eventos.modelo.excecoes.ValorDoItemCompostoNaoPodeSerNegativoException;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 @Entity
-@PrimaryKeyJoinColumn(name="id")
+@DiscriminatorValue("C")
 public class ItemComposto extends Item {
-	@OneToMany(mappedBy="id")
-	public List<ItemSimples> itens;
-	public String descricao;
-	public BigDecimal desconto;
+	@ElementCollection
+	private List<ItemSimples> itens = Lists.newArrayList();
+	private String descricao;
+	private BigDecimal desconto;
+	private BigDecimal valor;
 	
-	public ItemComposto(BigDecimal preco, String descricao) {
-		super(preco);
-		this.itens = Lists.newArrayList();
+	public ItemComposto(BigDecimal valor, String descricao) 
+			throws ValorDoItemCompostoNaoPodeSerNegativoException {
+		if (!isValorNaoNegativo(valor)) {
+			throw new ValorDoItemCompostoNaoPodeSerNegativoException();
+		}
+		this.valor = valor;
 		this.descricao = descricao;
 	}
 	
-	public ItemComposto(String descricao, BigDecimal desconto) {
+	public ItemComposto(String descricao, BigDecimal desconto) 
+			throws DescontoDoItemCompostoNaoPodeSerNegativoException {
+		if (!isValorNaoNegativo(desconto)) {
+			throw new DescontoDoItemCompostoNaoPodeSerNegativoException();
+		}
 		this.desconto = BigDecimalUtil.paraMonetario(desconto);
 		this.descricao = descricao;
+	}
+
+	private boolean isValorNaoNegativo(BigDecimal desconto)  {
+		if (desconto.compareTo(BigDecimal.ZERO) == -1) {
+			return false;
+		}
+		return true;
 	}
 	
 	public void adicionarItem(ItemSimples item) 
@@ -52,16 +69,30 @@ public class ItemComposto extends Item {
 	 */
 	@Override
 	public BigDecimal getPreco() {
-		if (this.preco != null) {
-			return BigDecimalUtil.paraMonetario(preco);
+		if (this.valor != null) {
+			return BigDecimalUtil.paraMonetario(valor);
 		}
 		BigDecimal total = itens.stream()
                 .map(Item::getPreco)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+		total = total.subtract(total.multiply(this.desconto));
 		return BigDecimalUtil.paraMonetario(total);
 	}
 	
-	public void setDesconto(BigDecimal desconto) {
+	public void setDesconto(BigDecimal desconto) 
+			throws DescontoDoItemCompostoNaoPodeSerNegativoException {
+		if (!isValorNaoNegativo(desconto)) {
+			throw new DescontoDoItemCompostoNaoPodeSerNegativoException();
+		}
 		this.desconto = BigDecimalUtil.paraMonetario(desconto);
+	}
+	
+	public String getDescricao() {
+		return this.descricao;
+	}
+
+	@Override
+	public String toString() {
+		return this.getDescricao();
 	}
 }
