@@ -46,6 +46,7 @@ public class Teste {
 		EntityManager em = emf.createEntityManager();
 		
 		EquipeResponsavelDAO equipeResponsavelDao = new EquipeResponsavelDAO(em);
+		EquipeOrganizadoraDAO equipeOrganizadoraDao = new EquipeOrganizadoraDAO(em);
 		AtividadeDAO atividadeDao = new AtividadeDAO(em);
 		EspacoFisicoDAO espacoFisicoDao = new EspacoFisicoDAO(em);
 		PessoaDAO pessoaDAO = new PessoaDAO(em);
@@ -54,7 +55,6 @@ public class Teste {
 		EventoDAO eventoDao = new EventoDAO(em);
 		ParticipacaoDAO participacaoDao = new ParticipacaoDAO(em);
 		InscricaoDAO inscricaoDao = new InscricaoDAO(em);
-		EquipeOrganizadoraDAO equipeOrganizadoraDao = new EquipeOrganizadoraDAO(em);
 		OrganizacaoDAO organizacaoDao = new OrganizacaoDAO(em);
 		
 		Evento evento = new EventoBuilder()
@@ -88,10 +88,9 @@ public class Teste {
 		Inscricao inscricao = new Inscricao(evento, participacao);
 		evento.adicionarInscricao(inscricao);
 		
-
 		Responsavel responsavel1 = new Responsavel(usuario1, "Curriculo");
 		Responsavel responsavel2 = new Responsavel(usuario2, "Curriculo");
-
+	
 		EquipeResponsavel equipeResponsavel = new EquipeResponsavel();
 		equipeResponsavel.adicionaMembro(responsavel1);
 		equipeResponsavel.adicionaMembro(responsavel2);
@@ -104,7 +103,6 @@ public class Teste {
 		organizacao.setEquipeOrganizadora(equipeOrganizadora);
 		organizacao.setEvento(evento);
 		organizacao.setUsuario(usuario1);
-		
 		
 		EspacoFisico espacoFisico = new EspacoFisicoBuilder()
 		.comCapacidade(30)
@@ -127,6 +125,7 @@ public class Teste {
 		usuarioDao.adiciona(usuario2);
 		responsavelDAO.adiciona(responsavel1);
 		responsavelDAO.adiciona(responsavel2);
+
 		participacaoDao.adiciona(participacao);
 		pessoaDAO.adiciona(pessoa1);
 		pessoaDAO.adiciona(pessoa2);
@@ -138,5 +137,7 @@ public class Teste {
 		atividadeDao.adiciona(atividade);
 		em.getTransaction().commit();
 		em.close();
+		
+
 	}
 }

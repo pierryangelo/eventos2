@@ -18,10 +18,19 @@ public class Pessoa {
 	private LocalDate dataNascimento;
 	
 	public Pessoa() {}
+	
 	public Pessoa(String nome) {
 		this.nome = nome;
 	}
 	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+
 	public String getNome() {
 		return nome;
 	}

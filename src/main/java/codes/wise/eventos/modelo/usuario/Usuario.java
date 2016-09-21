@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 
 import com.google.common.collect.Lists;
 
@@ -17,7 +16,6 @@ import codes.wise.eventos.modelo.excecoes.OrganizacaoJaExisteNaListaDeOrganizaco
 import codes.wise.eventos.modelo.excecoes.ParticipacaoJaExisteNaListaDeParticipacoesDoUsuarioException;
 
 @Entity
-@PrimaryKeyJoinColumn(name="id")
 public class Usuario {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
@@ -27,6 +25,7 @@ public class Usuario {
 	private Boolean isAtivo;
 	@OneToOne
 	private Pessoa pessoa;
+
 	@OneToMany(mappedBy="usuario")
 	private List<Organizacao> organizacoes;
 	@OneToMany(mappedBy="usuario")
@@ -53,6 +52,14 @@ public class Usuario {
 		this.organizacoes.add(organizacao);
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
 	public LocalDateTime getDataCadastro() {
 		return dataCadastro;
 	}

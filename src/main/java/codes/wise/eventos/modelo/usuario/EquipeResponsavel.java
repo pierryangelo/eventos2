@@ -1,7 +1,8 @@
 package codes.wise.eventos.modelo.usuario;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
-public class EquipeResponsavel extends Equipe<Responsavel> {}
+@PrimaryKeyJoinColumn(name="id")
+public class EquipeResponsavel extends Equipe<Responsavel>{}

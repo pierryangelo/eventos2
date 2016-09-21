@@ -2,9 +2,6 @@ package codes.wise.eventos.modelo.usuario;
 
 import java.util.List;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,9 +20,9 @@ import codes.wise.eventos.modelo.excecoes.UsuarioJaAdicionadoAEquipeException;
 import codes.wise.eventos.modelo.excecoes.UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Equipe<E> implements Time<E> {
-	@Id @GeneratedValue(strategy = GenerationType.TABLE)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@OneToMany
 	private List<E> membros;
@@ -76,5 +73,12 @@ public abstract class Equipe<E> implements Time<E> {
 	@Override
 	public List<E> getMembros() {
 		return ImmutableList.copyOf(membros);
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }

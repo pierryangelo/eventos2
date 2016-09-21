@@ -11,6 +11,8 @@ public class Responsavel {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
+	private EquipeResponsavel equipe;
+	@OneToOne
 	private Usuario usuario;
 	private String curriculo;
 	
