@@ -1,7 +1,6 @@
 package codes.wise.eventos.modelo.espaco_fisico;
 
 import static codes.wise.eventos.modelo.util.TimeUtil.verificaConflitoDeHorarios;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,8 +63,6 @@ public class EspacoFisico {
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) throws 
 			EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException, 
 			EspacosFisicosComLocalizacoesIguaisException {
-		checkNotNull(espacoFisico);
-		// to do: implementar hashCode
 		if (espacoFisico.equals(espacoFisicoPai)) {
 			throw new EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException();
 		}
