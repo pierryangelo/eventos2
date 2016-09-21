@@ -17,10 +17,8 @@ import codes.wise.eventos.modelo.util.BigDecimalUtil;
 public abstract class Item {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	protected Integer id;
-	
 	@OneToOne
 	protected Inscricao inscricao;
-	
 	protected BigDecimal preco;
 
 	public Item() {

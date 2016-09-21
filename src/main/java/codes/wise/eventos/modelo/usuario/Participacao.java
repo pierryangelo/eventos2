@@ -25,8 +25,7 @@ public class Participacao {
 		
 	}
 	
-	public Participacao(Inscricao inscricao, TipoDeParticipante tipoDeParticipante, Usuario usuario) {
-		this.inscricao = inscricao;
+	public Participacao(TipoDeParticipante tipoDeParticipante, Usuario usuario) {
 		this.tipoDeParticipante = tipoDeParticipante;
 		this.usuario = usuario;
 	}

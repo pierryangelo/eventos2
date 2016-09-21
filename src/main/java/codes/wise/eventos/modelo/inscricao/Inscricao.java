@@ -31,13 +31,15 @@ public class Inscricao {
 	private Participacao participacao;
 	@OneToMany
 	private List<Cupom> cupons;
-	
 	@OneToMany(mappedBy="inscricao")
 	private List<Item> carrinho;
 
-	public Inscricao() {
+	public Inscricao(Evento evento, Participacao participacao) {
 		this.carrinho = Lists.newArrayList();
 		this.cupons = Lists.newArrayList();
+		this.evento = evento;
+		this.participacao = participacao;
+		this.participacao.setInscricao(this);
 	}
 	
 	public void adicionarItem(Item item) 
@@ -45,7 +47,6 @@ public class Inscricao {
 		if (this.carrinho.contains(item)) {
 			throw new ItemJaAdicionadoAoCarrinhoException();
 		}
-		
 		this.carrinho.add(item);
 	}
 	

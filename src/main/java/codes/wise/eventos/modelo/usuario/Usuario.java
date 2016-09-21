@@ -3,9 +3,12 @@ package codes.wise.eventos.modelo.usuario;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 import com.google.common.collect.Lists;
@@ -15,11 +18,15 @@ import codes.wise.eventos.modelo.excecoes.ParticipacaoJaExisteNaListaDeParticipa
 
 @Entity
 @PrimaryKeyJoinColumn(name="id")
-public class Usuario extends Pessoa {
+public class Usuario {
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer id;
 	private LocalDateTime dataCadastro;
 	private String email;
 	private String password; 
 	private Boolean isAtivo;
+	@OneToOne
+	private Pessoa pessoa;
 	@OneToMany(mappedBy="usuario")
 	private List<Organizacao> organizacoes;
 	@OneToMany(mappedBy="usuario")
@@ -91,6 +98,22 @@ public class Usuario extends Pessoa {
 	}
 
 	public void setEventosQueEstouInscrito(List<Participacao> participacoes) {
+		this.participacoes = participacoes;
+	}
+
+	public Pessoa getPessoa() {
+		return pessoa;
+	}
+
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
+	}
+
+	public void setOrganizacoes(List<Organizacao> organizacoes) {
+		this.organizacoes = organizacoes;
+	}
+
+	public void setParticipacoes(List<Participacao> participacoes) {
 		this.participacoes = participacoes;
 	}
 

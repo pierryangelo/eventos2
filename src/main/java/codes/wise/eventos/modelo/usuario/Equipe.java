@@ -2,13 +2,16 @@ package codes.wise.eventos.modelo.usuario;
 
 import java.util.List;
 
-import javax.persistence.ElementCollection;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.google.common.collect.ImmutableList;
@@ -20,11 +23,11 @@ import codes.wise.eventos.modelo.excecoes.UsuarioJaAdicionadoAEquipeException;
 import codes.wise.eventos.modelo.excecoes.UsuarioPrincipalPrecisarEstarNaListaDeUsuariosException;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Equipe<E> implements Time<E> {
-	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.TABLE)
 	private Integer id;
-	@ElementCollection
+	@OneToMany
 	private List<E> membros;
 	@OneToOne
 	private E principal;
