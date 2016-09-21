@@ -28,6 +28,7 @@ import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeExcep
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.JaExisteEspacoFisicoAdicionadoException;
+import codes.wise.eventos.modelo.excecoes.NaoExisteAgendaParaEsteEspacoFisicoException;
 import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.inscricao.ItemComposto;
@@ -96,7 +97,6 @@ public class Evento {
 		this.checkins.add(usuario);
 	}
 	
-	// to do: hashCode e equals para comparar atividades
 	public void adicionaAtividade(Atividade atividade) 
 			throws JaExisteAtividadeAdicionadaException, HorarioJaOcupadoPorOutraAtividadeException {
 		if (this.atividades.contains(atividade)) {
@@ -105,46 +105,6 @@ public class Evento {
 		this.atividades.add(atividade);
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((eventoPai == null) ? 0 : eventoPai.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof Evento))
-			return false;
-		Evento other = (Evento) obj;
-		if (eventoPai == null) {
-			if (other.eventoPai != null)
-				return false;
-		} else if (!eventoPai.equals(other.eventoPai))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		if (nome == null) {
-			if (other.nome != null)
-				return false;
-		} else if (!nome.equals(other.nome))
-			return false;
-		if (tipo != other.tipo)
-			return false;
-		return true;
-	}
-
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) 
 			throws JaExisteEspacoFisicoAdicionadoException {
 		if (this.espacosFisicos.contains(espacoFisico)) {
@@ -158,16 +118,21 @@ public class Evento {
 	 * @return String
 	 */
 	public String getAgendaAtividades() {
-		return new Agenda(this).getAgendaOrdemCrescente();
+		return Agenda.getAgendaOrdemCrescente(atividades);
 	}
 	
 	/**
 	 * Retorna agenda por espaço físico ordenada por data de início das atividades.
 	 * @param espacoFisico
 	 * @return String
+	 * @throws NaoExisteAgendaParaEsteEspacoFisicoException 
 	 */
-	public String getAgendaEspacoFisico(EspacoFisico espacoFisico) {
-		return new Agenda(this).getAgendaPorEspacoFisico(espacoFisico);
+	public String getAgendaEspacoFisico(EspacoFisico espacoFisico) 
+			throws NaoExisteAgendaParaEsteEspacoFisicoException {
+		if (this.espacosFisicos.contains(espacoFisico)) {
+			return espacoFisico.getAgenda();
+		}
+		throw new NaoExisteAgendaParaEsteEspacoFisicoException();
 	}
 	
 	/**
@@ -341,5 +306,46 @@ public class Evento {
 
 	public void setInscricoes(List<Inscricao> inscricoes) {
 		this.inscricoes = inscricoes;
+	}
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((eventoPai == null) ? 0 : eventoPai.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Evento))
+			return false;
+		Evento other = (Evento) obj;
+		if (eventoPai == null) {
+			if (other.eventoPai != null)
+				return false;
+		} else if (!eventoPai.equals(other.eventoPai))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		if (tipo != other.tipo)
+			return false;
+		return true;
 	}
 }

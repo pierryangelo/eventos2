@@ -9,17 +9,16 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
+import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
-import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.usuario.EquipeResponsavel;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 @Entity
-public class Atividade {
+public class Atividade implements Agendavel {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
@@ -27,7 +26,7 @@ public class Atividade {
 	private String nome;
 	private LocalDateTime inicio;
 	private LocalDateTime termino;
-	@ManyToOne
+	@OneToOne
 	private EspacoFisico espacoFisico;
 	@Enumerated(EnumType.STRING)
 	private TipoDeAtividade tipoDeAtividade;
@@ -74,9 +73,7 @@ public class Atividade {
 		return espacoFisico;
 	}
 	
-	public void setEspacoFisico(EspacoFisico espacoFisico) 
-			throws HorarioJaOcupadoPorOutraAtividadeException {
-		espacoFisico.setAtividade(this);
+	public void setEspacoFisico(EspacoFisico espacoFisico) {
 		this.espacoFisico = espacoFisico;
 	}
 	
@@ -96,7 +93,7 @@ public class Atividade {
 		this.isPaga = isPaga;
 	}
 	
-	public EquipeResponsavel	 getEquipeResponsavel() {
+	public EquipeResponsavel getEquipeResponsavel() {
 		return equipeResponsavel;
 	}
 

@@ -11,7 +11,7 @@ import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
 import codes.wise.eventos.modelo.excecoes.EspacosFisicosComLocalizacoesIguaisException;
-import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
 
 public class EspacoFisicoTest {
 	private EspacoFisico e1, e2;
@@ -29,17 +29,17 @@ public class EspacoFisicoTest {
 		e2.adicionaEspacoFisico(e1);
 	}
 	
-	@Test(expected=HorarioJaOcupadoPorOutraAtividadeException.class)
+	@Test(expected=HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException.class)
 	public void espacoFisicoNaoPodeConterAtividadesComHorariosConflitantes() 
-			throws HorarioJaOcupadoPorOutraAtividadeException {
+			throws HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
 		Atividade a1 = new Atividade();
 		Atividade a2 = new Atividade();
 		a1.setInicio(LocalDateTime.of(2016, 10, 1, 8, 00));
 		a1.setTermino(LocalDateTime.of(2016, 10, 1, 10, 00));
 		a2.setInicio(LocalDateTime.of(2016, 10, 1, 9, 00));
 		a2.setTermino(LocalDateTime.of(2016, 10, 1, 11, 00));
-		e1.setAtividade(a1);
-		e1.setAtividade(a2);
+		e1.adicionaAtividade(a1);
+		e1.adicionaAtividade(a2);
 	}
 	
 	@Test(expected=EspacosFisicosComLocalizacoesIguaisException.class) 

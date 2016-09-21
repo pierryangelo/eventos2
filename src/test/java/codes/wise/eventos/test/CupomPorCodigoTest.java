@@ -32,6 +32,4 @@ public class CupomPorCodigoTest {
 	public void aoPassarBooleanoPeloConstrutorMetodoisAtivoDeveCorresponder() {
 		assertEquals(false, cupomPorCodigo2.isAtivo());
 	}
-	
-	
 }

@@ -2,10 +2,8 @@ package codes.wise.eventos.modelo.espaco_fisico;
 
 import static codes.wise.eventos.modelo.util.TimeUtil.verificaConflitoDeHorarios;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -19,11 +17,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.javadocmd.simplelatlng.LatLng;
 
+import codes.wise.eventos.modelo.agenda.Agenda;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
 import codes.wise.eventos.modelo.excecoes.EspacosFisicosComLocalizacoesIguaisException;
-import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;;
 
 @Entity
 public class EspacoFisico {
@@ -37,27 +36,29 @@ public class EspacoFisico {
 	private String endereco;
 	private String descricao;
 	private LatLng localizacao;
-	@OneToOne(mappedBy="espacoFisico")
-	private Atividade atividade;
 	private Integer capacidade;
 	@Enumerated(EnumType.STRING)
 	private TipoDeEspacoFisico tipoDeEspacoFisico;
 	@OneToMany(mappedBy="espacoFisicoPai")
 	private List<EspacoFisico> espacosFisicosFilhos;
-	@ElementCollection
-	private List<Horario> horarios;
+	@OneToMany(mappedBy="espacoFisico")
+	private List<Atividade> atividades;
 
 	public EspacoFisico() {
-		this.horarios = Lists.newArrayList();
 		this.espacosFisicosFilhos = Lists.newArrayList();
+		this.atividades = Lists.newArrayList();
 	}
 
-	public void setAtividade(Atividade atividade) 
-			throws HorarioJaOcupadoPorOutraAtividadeException {
-		if (!this.isHorarioDisponivel(atividade.getInicio(), atividade.getTermino())) {
-			throw new HorarioJaOcupadoPorOutraAtividadeException();
+	public void adicionaAtividade(Atividade atividade) 
+			throws HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
+		for (Atividade a : atividades) {
+			if (verificaConflitoDeHorarios(a.getInicio(), a.getTermino(), 
+					atividade.getInicio(), atividade.getTermino())) {
+				throw new HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException();
+			}
 		}
-		this.atividade = atividade;
+		atividade.setEspacoFisico(this);
+		this.atividades.add(atividade);
 	}
 	
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) throws 
@@ -72,15 +73,6 @@ public class EspacoFisico {
 		this.espacosFisicosFilhos.add(espacoFisico);
 	}
 	
-	public boolean isHorarioDisponivel(LocalDateTime inicio, LocalDateTime termino) {
-		for (Horario horario : this.horarios) {
-			if (verificaConflitoDeHorarios(horario.getInicio(), horario.getTermino(), inicio, termino)) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
 	public EspacoFisico getEspacoFisicoPai() {
 		return espacoFisicoPai;
 	}
@@ -91,6 +83,10 @@ public class EspacoFisico {
 	
 	public LatLng getLocalizacao() {
 		return localizacao;
+	}
+	
+	public String getAgenda() {
+		return Agenda.getAgendaOrdemCrescente(atividades);
 	}
 	
 	public void setLocalizacao(LatLng localizacao) {
@@ -151,17 +147,5 @@ public class EspacoFisico {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public List<Horario> getHorarios() {
-		return horarios;
-	}
-
-	public void setHorarios(List<Horario> horarios) {
-		this.horarios = horarios;
-	}
-
-	public Atividade getAtividade() {
-		return atividade;
 	}
 }

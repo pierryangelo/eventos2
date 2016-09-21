@@ -42,11 +42,6 @@ public class EspacoFisicoBuilder {
 		return this;
 	}
 	
-	public EspacoFisicoBuilder comAtividade(Atividade atividade) throws HorarioJaOcupadoPorOutraAtividadeException {
-		this.espacoFisico.setAtividade(atividade);
-		return this;
-	}
-	
 	public EspacoFisico getEspacoFisico() {
 		return this.espacoFisico;
 	}
