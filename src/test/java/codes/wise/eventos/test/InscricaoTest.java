@@ -13,9 +13,13 @@ import codes.wise.eventos.modelo.atividade.AtividadeBuilder;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
 import codes.wise.eventos.modelo.evento.TipoDeEvento;
+import codes.wise.eventos.modelo.excecoes.AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
+import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
+import codes.wise.eventos.modelo.excecoes.NaoExisteAtividadeNaListaDeAtividadesDoEventoException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
+import codes.wise.eventos.modelo.inscricao.ItemSimples;
 import codes.wise.eventos.modelo.usuario.Participacao;
 import codes.wise.eventos.modelo.usuario.Pessoa;
 import codes.wise.eventos.modelo.usuario.TipoDeParticipante;
@@ -29,10 +33,11 @@ public class InscricaoTest {
 	private Usuario usuario;
 	private Evento evento;
 	private Atividade atividade;
+	private ItemSimples itemSimples;
 	
 	@Before
 	public void inicializa() 
-			throws JaExisteAtividadeAdicionadaException, HorarioJaOcupadoPorOutraAtividadeException {
+			throws JaExisteAtividadeAdicionadaException, HorarioJaOcupadoPorOutraAtividadeException, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException {
 		evento = new EventoBuilder()
 				.comNome("Semana Cultural")
 				.deTipo(TipoDeEvento.SEMANA_CULTURAL)
@@ -44,6 +49,7 @@ public class InscricaoTest {
 				.comNome("Curso de Inglês")
 				.comValor(new BigDecimal("200"))
 				.doEvento(evento)
+				.isPaga(true)
 				.getAtividade();
 		
 		evento.adicionaAtividade(atividade);
@@ -57,11 +63,16 @@ public class InscricaoTest {
 				.comEmail("pierryangelo@gmail.com")
 				.getUsuario());
 		inscricao = new Inscricao(evento, participacao);
+		itemSimples = new ItemSimples(atividade, inscricao);
 	}
 	
-	@Test
-	public void test() {
-		fail("Not yet implemented");
+	@Test(expected=ItemJaAdicionadoAoCarrinhoException.class)
+	public void carrinhoNaoAceitaItensRepetidos() 
+			throws ItemJaAdicionadoAoCarrinhoException {
+		inscricao.adicionarItem(itemSimples);
+		inscricao.adicionarItem(itemSimples);
 	}
+	
+	
 
 }

@@ -150,8 +150,6 @@ public class Teste {
 		ItemSimples itemSimples1 = new ItemSimples(atividade1, inscricao);
 		ItemSimples itemSimples2 = new ItemSimples(atividade2, inscricao);
 		
-
-
 		ItemComposto itemComposto = new ItemComposto("Kit de Atividade", new BigDecimal("0.10"));
 		itemComposto.adicionarItem(itemSimples1);
 		itemComposto.adicionarItem(itemSimples2);

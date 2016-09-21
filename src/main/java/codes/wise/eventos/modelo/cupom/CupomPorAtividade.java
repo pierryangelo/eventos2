@@ -15,7 +15,7 @@ public class CupomPorAtividade extends Cupom {
 	@OneToOne
 	private Atividade atividade;
 	
-	protected CupomPorAtividade(BigDecimal porcentagemDoDesconto, Evento evento, Atividade atividade) {
+	public CupomPorAtividade(BigDecimal porcentagemDoDesconto, Evento evento, Atividade atividade) {
 		super(porcentagemDoDesconto);
 		this.evento = evento;
 		this.atividade = atividade;

@@ -109,7 +109,7 @@ public class Atividade {
 	}
 	
 	public BigDecimal getValor() {
-		return this.valor;
+		return BigDecimalUtil.paraMonetario(this.valor);
 	}
 
 	public Integer getId() {
