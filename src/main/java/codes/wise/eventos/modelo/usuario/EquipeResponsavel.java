@@ -21,7 +21,7 @@ import codes.wise.eventos.modelo.excecoes.UsuarioPrincipalPrecisarEstarNaListaDe
 public class EquipeResponsavel {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@OneToMany(mappedBy="equipeResponsavel")
+	@OneToMany
 	private List<Responsavel> membros;
 	@OneToOne
 	private Responsavel principal;
