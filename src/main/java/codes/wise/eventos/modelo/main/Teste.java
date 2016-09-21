@@ -28,6 +28,7 @@ import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
 import codes.wise.eventos.modelo.evento.TipoDeEvento;
 import codes.wise.eventos.modelo.excecoes.AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException;
+import codes.wise.eventos.modelo.excecoes.DescontoDoItemCompostoNaoPodeSerNegativoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
@@ -36,7 +37,6 @@ import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.MembroJaExisteNaListaDeMembros;
 import codes.wise.eventos.modelo.excecoes.NaoExisteAtividadeNaListaDeAtividadesDoEventoException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
-import codes.wise.eventos.modelo.inscricao.Item;
 import codes.wise.eventos.modelo.inscricao.ItemComposto;
 import codes.wise.eventos.modelo.inscricao.ItemSimples;
 import codes.wise.eventos.modelo.usuario.EquipeOrganizadora;
@@ -50,7 +50,7 @@ import codes.wise.eventos.modelo.usuario.Usuario;
 import codes.wise.eventos.modelo.usuario.UsuarioBuilder;
 
 public class Teste {
-	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros, HorarioJaOcupadoPorOutraAtividadeException, InscricaoJaExisteException, ItemSimplesJaExisteNaListaDeItensCompostos, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, ItemJaAdicionadoAoCarrinhoException, JaExisteAtividadeAdicionadaException{
+	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros, HorarioJaOcupadoPorOutraAtividadeException, InscricaoJaExisteException, ItemSimplesJaExisteNaListaDeItensCompostos, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, ItemJaAdicionadoAoCarrinhoException, JaExisteAtividadeAdicionadaException, DescontoDoItemCompostoNaoPodeSerNegativoException{
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("eventos");
 		EntityManager em = emf.createEntityManager();
 		
@@ -144,8 +144,13 @@ public class Teste {
 				.doEvento(evento)
 				.getAtividade();
 		
+		evento.adicionaAtividade(atividade1);
+		evento.adicionaAtividade(atividade2);
+		
 		ItemSimples itemSimples1 = new ItemSimples(atividade1, inscricao);
 		ItemSimples itemSimples2 = new ItemSimples(atividade2, inscricao);
+		
+
 
 		ItemComposto itemComposto = new ItemComposto("Kit de Atividade", new BigDecimal("0.10"));
 		itemComposto.adicionarItem(itemSimples1);

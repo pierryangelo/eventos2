@@ -23,11 +23,6 @@ public class Participacao {
 	@OneToOne
 	private EquipeResponsavel equipeResponsavel;
 	
-	
-	public Participacao() {
-		
-	}
-	
 	public Participacao(TipoDeParticipante tipoDeParticipante, Usuario usuario) {
 		this.tipoDeParticipante = tipoDeParticipante;
 		this.usuario = usuario;

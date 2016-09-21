@@ -95,4 +95,47 @@ public class ItemComposto extends Item {
 	public String toString() {
 		return this.getDescricao();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((desconto == null) ? 0 : desconto.hashCode());
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((itens == null) ? 0 : itens.hashCode());
+		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ItemComposto other = (ItemComposto) obj;
+		if (desconto == null) {
+			if (other.desconto != null)
+				return false;
+		} else if (!desconto.equals(other.desconto))
+			return false;
+		if (descricao == null) {
+			if (other.descricao != null)
+				return false;
+		} else if (!descricao.equals(other.descricao))
+			return false;
+		if (itens == null) {
+			if (other.itens != null)
+				return false;
+		} else if (!itens.equals(other.itens))
+			return false;
+		if (valor == null) {
+			if (other.valor != null)
+				return false;
+		} else if (!valor.equals(other.valor))
+			return false;
+		return true;
+	}
 }
