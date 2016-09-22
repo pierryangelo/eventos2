@@ -27,8 +27,8 @@ public class TimeUtil {
 	 */
 	public static boolean dentroDoIntervalo(LocalDateTime limiteInicial, LocalDateTime limiteFinal, 
 			LocalDateTime inicio, LocalDateTime termino) {
-		return ((inicio.isAfter(limiteInicial) && inicio.isBefore(limiteFinal)) 
-			&& (termino.isAfter(limiteInicial) && termino.isBefore(limiteFinal))); 
+		return ((inicio.equals(limiteInicial) || inicio.isAfter(limiteInicial)) && inicio.isBefore(limiteFinal)) 
+				&& termino.isAfter(limiteInicial) && (termino.equals(limiteFinal) || termino.isBefore(limiteFinal)); 
 	}
 	
 	public static boolean dataDeInicioAnteriorADataAtual(LocalDateTime dataDeInicio) {
