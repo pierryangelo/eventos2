@@ -26,9 +26,11 @@ import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisicoBuilder;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
+import codes.wise.eventos.modelo.evento.StatusDoEvento;
 import codes.wise.eventos.modelo.evento.TipoDeEvento;
 import codes.wise.eventos.modelo.excecoes.AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException;
 import codes.wise.eventos.modelo.excecoes.DescontoDoItemCompostoNaoPodeSerNegativoException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
@@ -52,7 +54,19 @@ import codes.wise.eventos.modelo.usuario.Usuario;
 import codes.wise.eventos.modelo.usuario.UsuarioBuilder;
 
 public class Teste {
-	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros, HorarioJaOcupadoPorOutraAtividadeException, InscricaoJaExisteException, ItemSimplesJaExisteNaListaDeItensCompostos, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, ItemJaAdicionadoAoCarrinhoException, JaExisteAtividadeAdicionadaException, DescontoDoItemCompostoNaoPodeSerNegativoException, StatusDoEventoNaoPermiteMaisInscricoesException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException{
+	public static void main(String[] args) throws 
+	MembroJaExisteNaListaDeMembros, 
+	HorarioJaOcupadoPorOutraAtividadeException, 
+	InscricaoJaExisteException, 
+	ItemSimplesJaExisteNaListaDeItensCompostos, 
+	NaoExisteAtividadeNaListaDeAtividadesDoEventoException, 
+	AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, 
+	ItemJaAdicionadoAoCarrinhoException, 
+	JaExisteAtividadeAdicionadaException, 
+	DescontoDoItemCompostoNaoPodeSerNegativoException,
+	StatusDoEventoNaoPermiteMaisInscricoesException, 
+	StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException, 
+	HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException{
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("eventos");
 		EntityManager em = emf.createEntityManager();
 		
@@ -72,8 +86,9 @@ public class Teste {
 		Evento evento = new EventoBuilder()
 				.comNome("INFOTECH")
 				.comDescricao("Semana de Tecnologia do IFPI")
-				.comInicio(LocalDateTime.of(2016, 11, 1, 8, 0))
-				.comTermino(LocalDateTime.of(2016, 11, 10, 17, 0))
+				.comInicio(LocalDateTime.of(2016, 1, 1, 8, 0))
+				.comTermino(LocalDateTime.of(2016, 12, 10, 17, 0))
+				.comStatus(StatusDoEvento.ABERTO_PARA_INSCRICAO)
 				.deTipo(TipoDeEvento.SEMANA_CULTURAL)
 				.getEvento();
 		
@@ -129,6 +144,8 @@ public class Teste {
 		Atividade atividade1 = new AtividadeBuilder()
 				.comNome("CursoJPA")
 				.comValor(new BigDecimal(100))
+				.comInicio(LocalDateTime.of(2016, 8, 9, 0, 0))
+				.comTermino(LocalDateTime.of(2016, 8, 10, 0, 0))
 				.deTipo(TipoDeAtividade.PALESTRA)
 				.comEquipeResponsavel(equipeResponsavel)
 				.noEspacoFisico(espacoFisico)
@@ -138,6 +155,8 @@ public class Teste {
 		
 		Atividade atividade2 = new AtividadeBuilder()
 				.comNome("Curso de Swift")
+				.comInicio(LocalDateTime.of(2016, 8, 11, 0, 0))
+				.comTermino(LocalDateTime.of(2016, 8, 12, 0, 0))
 				.comValor(new BigDecimal(100))
 				.deTipo(TipoDeAtividade.MINICURSO)
 				.comInicio(LocalDateTime.now())

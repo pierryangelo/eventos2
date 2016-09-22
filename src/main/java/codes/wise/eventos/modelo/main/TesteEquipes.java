@@ -6,10 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import codes.wise.eventos.modelo.dao.EquipeOrganizadoraDAO;
-import codes.wise.eventos.modelo.dao.EquipeResponsavelDAO;
-import codes.wise.eventos.modelo.dao.ResponsavelDAO;
-import codes.wise.eventos.modelo.dao.UsuarioDAO;
 import codes.wise.eventos.modelo.excecoes.MembroJaExisteNaListaDeMembros;
 import codes.wise.eventos.modelo.usuario.EquipeOrganizadora;
 import codes.wise.eventos.modelo.usuario.EquipeResponsavel;
@@ -22,10 +18,6 @@ public class TesteEquipes {
 	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros {
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("eventos");
 		EntityManager em = emf.createEntityManager();
-		EquipeResponsavelDAO equipeResponsavelDao = new EquipeResponsavelDAO(em);
-		EquipeOrganizadoraDAO equipeOrganizadoraDao = new EquipeOrganizadoraDAO(em);
-		UsuarioDAO usuarioDao = new UsuarioDAO(em);
-		ResponsavelDAO responsavelDAO = new ResponsavelDAO(em);
 
 		
 		Pessoa pessoa1 = new Pessoa("Pierry Ângelo Pereira");

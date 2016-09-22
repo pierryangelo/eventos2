@@ -3,6 +3,7 @@ package codes.wise.eventos.test;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
 import codes.wise.eventos.modelo.evento.StatusDoEvento;
 import codes.wise.eventos.modelo.excecoes.AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.NaoExisteAtividadeNaListaDeAtividadesDoEventoException;
@@ -34,19 +36,27 @@ public class ItemSimplesTest {
 	NaoExisteAtividadeNaListaDeAtividadesDoEventoException, 
 	AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, 
 	JaExisteAtividadeAdicionadaException, 
-	HorarioJaOcupadoPorOutraAtividadeException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException {
+	HorarioJaOcupadoPorOutraAtividadeException, 
+	StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException, 
+	HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException {
 		this.atividade1 = new AtividadeBuilder()
 				.comValor(new BigDecimal("100"))
 				.isPaga(true)
+				.comInicio(LocalDateTime.of(2016, 8, 2, 0, 0))
+				.comTermino(LocalDateTime.of(2016, 8, 8, 0, 0))
 				.getAtividade();
 		
 		this.atividade2 = new AtividadeBuilder()
 				.comValor(new BigDecimal("200"))
+				.comInicio(LocalDateTime.of(2016, 8, 9, 0, 0))
+				.comTermino(LocalDateTime.of(2016, 8, 10, 0, 0))
 				.isPaga(true)
 				.getAtividade();
 
 		this.evento = new EventoBuilder()
 				.comNome("Evento")
+				.comInicio(LocalDateTime.of(2016, 8, 1, 0, 0))
+				.comTermino(LocalDateTime.of(2016, 12, 1, 0, 0))
 				.comStatus(StatusDoEvento.ABERTO_PARA_INSCRICAO)
 				.getEvento();
 				
@@ -61,7 +71,8 @@ public class ItemSimplesTest {
 	}
 	
 	@Test(expected=AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException.class)
-	public void naoAceitaAtividadeNaoPaga() throws AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException,
+	public void naoAceitaAtividadeNaoPaga() 
+			throws AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException,
 	NaoExisteAtividadeNaListaDeAtividadesDoEventoException {
 		this.atividade1.setIsPaga(false);
 		this.is1.setAtividade(atividade1);

@@ -14,6 +14,4 @@ import org.junit.runners.Suite;
 	ItemSimplesTest.class,
 	ItemCompostoTest.class
 })
-public class TestaTudo {
-
-}
+public class TestaTudo {}

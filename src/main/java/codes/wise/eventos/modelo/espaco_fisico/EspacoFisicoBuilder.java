@@ -2,9 +2,6 @@ package codes.wise.eventos.modelo.espaco_fisico;
 
 import com.javadocmd.simplelatlng.LatLng;
 
-import codes.wise.eventos.modelo.atividade.Atividade;
-import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
-
 public class EspacoFisicoBuilder {
 	private EspacoFisico espacoFisico;
 	
@@ -45,5 +42,4 @@ public class EspacoFisicoBuilder {
 	public EspacoFisico getEspacoFisico() {
 		return this.espacoFisico;
 	}
-	
 }

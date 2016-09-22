@@ -1,7 +1,5 @@
 package codes.wise.eventos.modelo.main;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -26,8 +24,5 @@ public class UsuarioTestDAO {
 		}
 		em.getTransaction().commit();
 		em.close();
-		
-		
-		
 	}
 }

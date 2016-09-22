@@ -24,6 +24,7 @@ import codes.wise.eventos.modelo.cupom.Cupom;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
@@ -37,6 +38,7 @@ import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.inscricao.ItemComposto;
 import codes.wise.eventos.modelo.inscricao.ItemSimples;
 import codes.wise.eventos.modelo.usuario.Usuario;
+import codes.wise.eventos.modelo.util.TimeUtil;
 
 @Entity
 public class Evento {
@@ -79,11 +81,9 @@ public class Evento {
 		if (!this.status.equals(StatusDoEvento.ABERTO_PARA_INSCRICAO)) {
 			throw new StatusDoEventoNaoPermiteMaisInscricoesException();
 		}
-		
 		if (this.inscricoes.contains(inscricao)) {
 			throw new InscricaoJaExisteException();
 		}
-		
 		this.inscricoes.add(inscricao);
 	}
 	
@@ -112,7 +112,11 @@ public class Evento {
 	public void adicionaAtividade(Atividade atividade) 
 			throws JaExisteAtividadeAdicionadaException, 
 			HorarioJaOcupadoPorOutraAtividadeException, 
-			StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException {
+			StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException, 
+			HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException {
+		if (!TimeUtil.dentroDoIntervalo(this.inicio, this.termino, atividade.getInicio(), atividade.getTermino())) {
+			throw new HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException();
+		}
 		if (!this.status.equals(StatusDoEvento.ABERTO_PARA_INSCRICAO)) {
 			throw new StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException();
 		}

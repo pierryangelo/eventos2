@@ -3,6 +3,7 @@ package codes.wise.eventos.test;
 import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +15,7 @@ import codes.wise.eventos.modelo.cupom.CupomPorAtividade;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
 import codes.wise.eventos.modelo.evento.StatusDoEvento;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
@@ -23,6 +25,8 @@ public class CupomPorAtividadeTest {
 	private Evento evento = new EventoBuilder()
 			.comNome("Novo Evento")
 			.comStatus(StatusDoEvento.ABERTO_PARA_INSCRICAO)
+			.comInicio(LocalDateTime.of(2016, 8, 1, 0, 0))
+			.comTermino(LocalDateTime.of(2016, 12, 1, 0, 0))
 			.getEvento();
 	private CupomPorAtividade cupomPorAtividade1, cupomPorAtividade2;
 	private Atividade atividade1, atividade2;
@@ -30,15 +34,20 @@ public class CupomPorAtividadeTest {
 	@Before
 	public void inicializa() throws
 		JaExisteAtividadeAdicionadaException,
-		HorarioJaOcupadoPorOutraAtividadeException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException {
+		HorarioJaOcupadoPorOutraAtividadeException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException,
+		HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException {
 		atividade1 = new AtividadeBuilder()
 				.comNome("Palestra")
 				.comValor(new BigDecimal("100"))
 				.doEvento(evento)
+				.comInicio(LocalDateTime.of(2016, 8, 2, 0, 0))
+				.comTermino(LocalDateTime.of(2016, 8, 8, 0, 0))
 				.deTipo(TipoDeAtividade.PALESTRA)
 				.getAtividade();
 		atividade2 = new AtividadeBuilder()
 				.comNome("Minicurso")
+				.comInicio(LocalDateTime.of(2016, 8, 9, 0, 0))
+				.comTermino(LocalDateTime.of(2016, 8, 10, 0, 0))
 				.comValor(new BigDecimal("100"))
 				.deTipo(TipoDeAtividade.MINICURSO)
 				.getAtividade();

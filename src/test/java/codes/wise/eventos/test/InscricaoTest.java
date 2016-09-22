@@ -13,6 +13,7 @@ import codes.wise.eventos.modelo.evento.EventoBuilder;
 import codes.wise.eventos.modelo.evento.StatusDoEvento;
 import codes.wise.eventos.modelo.evento.TipoDeEvento;
 import codes.wise.eventos.modelo.excecoes.AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
@@ -35,18 +36,21 @@ public class InscricaoTest {
 	
 	@Before
 	public void inicializa() 
-			throws JaExisteAtividadeAdicionadaException, HorarioJaOcupadoPorOutraAtividadeException, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException {
+			throws JaExisteAtividadeAdicionadaException, HorarioJaOcupadoPorOutraAtividadeException, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException, HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException {
 		evento = new EventoBuilder()
 				.comStatus(StatusDoEvento.ABERTO_PARA_INSCRICAO)
 				.comNome("Semana Cultural")
 				.deTipo(TipoDeEvento.SEMANA_CULTURAL)
-				.comInicio(LocalDateTime.now())
+				.comInicio(LocalDateTime.of(2016, 8, 1, 0, 0))
+				.comTermino(LocalDateTime.of(2016, 12, 1, 0, 0))
 				.getEvento();
 
 		atividade = new AtividadeBuilder()
 				.comInicio(LocalDateTime.now())
 				.comNome("Curso de Inglês")
 				.comValor(new BigDecimal("200"))
+				.comInicio(LocalDateTime.of(2016, 8, 9, 0, 0))
+				.comTermino(LocalDateTime.of(2016, 8, 10, 0, 0))
 				.doEvento(evento)
 				.isPaga(true)
 				.getAtividade();
