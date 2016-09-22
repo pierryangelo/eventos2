@@ -3,6 +3,7 @@ package codes.wise.eventos.modelo.usuario;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import codes.wise.eventos.modelo.evento.Evento;
@@ -20,9 +22,11 @@ import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.excecoes.UsuarioNaoPodeFazerCheckinEmEventoComInscricaoNaoPagaException;
 import codes.wise.eventos.modelo.excecoes.UsuarioNaoPodeFazerCheckinEmEventoQueNaoConstaNaSuaListaDeParticipacoesException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
+import codes.wise.eventos.modelo.observer.Notificacao;
+import codes.wise.eventos.modelo.observer.Observador;
 
 @Entity
-public class Usuario {
+public class Usuario implements Observador {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private LocalDateTime dataCadastro;
@@ -36,10 +40,13 @@ public class Usuario {
 	private List<Organizacao> organizacoes;
 	@OneToMany(mappedBy="usuario")
 	private List<Participacao> participacoes;
+	@ElementCollection
+	private List<Notificacao> notificacoes;
 
 	public Usuario() {
 		this.organizacoes = Lists.newArrayList();
 		this.participacoes = Lists.newArrayList();
+		this.notificacoes = Lists.newArrayList();
 	}
 	
 	public void adicionarParticipacao(Participacao participacao) 
@@ -161,5 +168,19 @@ public class Usuario {
 	public String toString() {
 		return "Usuario [dataCadastro=" + dataCadastro + ", email=" + email + ", password=" + password + ", isAtivo="
 				+ isAtivo + ", organizacoes=" + organizacoes + ", participacoes=" + participacoes + "]";
+	}
+
+	@Override
+	public void atualizar(Notificacao notificacao) {
+		this.notificacoes.add(notificacao);
+	}
+	
+	/**
+	 * Retorna notificações mais recentes.
+	 * @return List<Notificacao>
+	 */
+	public List<Notificacao> getNotificacoes() {
+		this.notificacoes.sort((a1, a2) -> a2.getDataEHora().compareTo(a1.getDataEHora()));
+		return ImmutableList.copyOf(this.notificacoes);
 	}
 }

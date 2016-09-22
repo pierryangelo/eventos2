@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -38,6 +39,7 @@ public class Inscricao {
 	@OneToMany(mappedBy="inscricao")
 	private List<Item> carrinho;
 	private boolean isPaga;
+	@Transient
 	private FormaDePagamento formaDePagamento;
 
 	public Inscricao(Evento evento, Participacao participacao) {

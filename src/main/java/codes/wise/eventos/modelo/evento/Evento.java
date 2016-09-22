@@ -22,7 +22,6 @@ import codes.wise.eventos.modelo.agenda.Agenda;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.cupom.Cupom;
 import codes.wise.eventos.modelo.cupom.CupomPorCodigo;
-import codes.wise.eventos.modelo.cupom.CupomPorData;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.excecoes.CupomJaExisteNaListaDeCuponsException;
 import codes.wise.eventos.modelo.excecoes.DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException;
@@ -42,11 +41,12 @@ import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.inscricao.ItemComposto;
 import codes.wise.eventos.modelo.inscricao.ItemSimples;
+import codes.wise.eventos.modelo.observer.Observavel;
 import codes.wise.eventos.modelo.usuario.Usuario;
 import codes.wise.eventos.modelo.util.TimeUtil;
 
 @Entity
-public class Evento {
+public class Evento extends Observavel {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
@@ -97,6 +97,13 @@ public class Evento {
 		this.cupons.add(cupom);
 	}
 	
+	/**
+	 * Adiciona as inscrições e, para cada inscrição paga, adiciona o usuário participante 
+	 * daquela inscrição à lista de observadores.
+	 * @param inscricao
+	 * @throws InscricaoJaExisteException
+	 * @throws StatusDoEventoNaoPermiteMaisInscricoesException
+	 */
 	public void adicionarInscricao(Inscricao inscricao) 
 			throws InscricaoJaExisteException, 
 			StatusDoEventoNaoPermiteMaisInscricoesException {
@@ -106,6 +113,11 @@ public class Evento {
 		if (this.inscricoes.contains(inscricao)) {
 			throw new InscricaoJaExisteException();
 		}
+		this.inscricoes.forEach(i -> {
+			if (i.isPaga()) {
+				this.adicionarObservador(i.getParticipacao().getUsuario());
+			}
+		});
 		this.inscricoes.add(inscricao);
 	}
 	
@@ -124,6 +136,9 @@ public class Evento {
 			throw new EventoSateliteNaoPodeSerEventoPaiException();
 		}
 		this.eventosSatelites.add(eventoSatelite);
+		
+		this.setNotificacao("Evento satélite: " + eventoSatelite.getNome() + " foi adicionado!");
+		this.notificarObservadores();
 	}
 	
 	public void fazerCheckin(Usuario usuario) 
@@ -152,6 +167,8 @@ public class Evento {
 			throw new JaExisteAtividadeAdicionadaException();
 		}
 		this.atividades.add(atividade);
+		this.setNotificacao("Uma nova atividade: " + atividade.getNome() + " foi adicionada!");
+		this.notificarObservadores();
 	}
 	
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) 
@@ -160,6 +177,8 @@ public class Evento {
 			throw new JaExisteEspacoFisicoAdicionadoException();
 		}
 		this.espacosFisicos.add(espacoFisico);
+		this.setNotificacao("Novo espaço físico: " + espacoFisico.getNome() + " foi adicionado!");
+		this.notificarObservadores();
 	}
 	
 	/**
@@ -291,6 +310,8 @@ public class Evento {
 
 	public void setStatus(StatusDoEvento status) {
 		this.status = status;
+		this.setNotificacao("O status do evento mudou para: " + this.status.toString() + " foi adicionado!");
+		this.notificarObservadores();
 	}
 
 	public List<Atividade> getAtividades() {
