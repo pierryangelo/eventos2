@@ -36,6 +36,8 @@ import codes.wise.eventos.modelo.excecoes.ItemSimplesJaExisteNaListaDeItensCompo
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.MembroJaExisteNaListaDeMembros;
 import codes.wise.eventos.modelo.excecoes.NaoExisteAtividadeNaListaDeAtividadesDoEventoException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteMaisInscricoesException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.inscricao.ItemComposto;
 import codes.wise.eventos.modelo.inscricao.ItemSimples;
@@ -50,7 +52,7 @@ import codes.wise.eventos.modelo.usuario.Usuario;
 import codes.wise.eventos.modelo.usuario.UsuarioBuilder;
 
 public class Teste {
-	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros, HorarioJaOcupadoPorOutraAtividadeException, InscricaoJaExisteException, ItemSimplesJaExisteNaListaDeItensCompostos, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, ItemJaAdicionadoAoCarrinhoException, JaExisteAtividadeAdicionadaException, DescontoDoItemCompostoNaoPodeSerNegativoException{
+	public static void main(String[] args) throws MembroJaExisteNaListaDeMembros, HorarioJaOcupadoPorOutraAtividadeException, InscricaoJaExisteException, ItemSimplesJaExisteNaListaDeItensCompostos, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, ItemJaAdicionadoAoCarrinhoException, JaExisteAtividadeAdicionadaException, DescontoDoItemCompostoNaoPodeSerNegativoException, StatusDoEventoNaoPermiteMaisInscricoesException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException{
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("eventos");
 		EntityManager em = emf.createEntityManager();
 		

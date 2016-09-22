@@ -29,6 +29,8 @@ import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.JaExisteEspacoFisicoAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.NaoExisteAgendaParaEsteEspacoFisicoException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteMaisInscricoesException;
 import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.inscricao.ItemComposto;
@@ -71,10 +73,16 @@ public class Evento {
 	}
 	
 	public void adicionarInscricao(Inscricao inscricao) 
-			throws InscricaoJaExisteException {
+			throws InscricaoJaExisteException, 
+			StatusDoEventoNaoPermiteMaisInscricoesException {
+		if (!this.status.equals(StatusDoEvento.ABERTO_PARA_INSCRICAO)) {
+			throw new StatusDoEventoNaoPermiteMaisInscricoesException();
+		}
+		
 		if (this.inscricoes.contains(inscricao)) {
 			throw new InscricaoJaExisteException();
 		}
+		
 		this.inscricoes.add(inscricao);
 	}
 	
@@ -98,7 +106,12 @@ public class Evento {
 	}
 	
 	public void adicionaAtividade(Atividade atividade) 
-			throws JaExisteAtividadeAdicionadaException, HorarioJaOcupadoPorOutraAtividadeException {
+			throws JaExisteAtividadeAdicionadaException, 
+			HorarioJaOcupadoPorOutraAtividadeException, 
+			StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException {
+		if (!this.status.equals(StatusDoEvento.ABERTO_PARA_INSCRICAO)) {
+			throw new StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException();
+		}
 		if (this.atividades.contains(atividade)) {
 			throw new JaExisteAtividadeAdicionadaException();
 		}

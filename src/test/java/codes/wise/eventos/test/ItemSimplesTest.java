@@ -11,10 +11,12 @@ import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.atividade.AtividadeBuilder;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
+import codes.wise.eventos.modelo.evento.StatusDoEvento;
 import codes.wise.eventos.modelo.excecoes.AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.NaoExisteAtividadeNaListaDeAtividadesDoEventoException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.inscricao.ItemSimples;
 import codes.wise.eventos.modelo.usuario.Participacao;
@@ -32,7 +34,7 @@ public class ItemSimplesTest {
 	NaoExisteAtividadeNaListaDeAtividadesDoEventoException, 
 	AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, 
 	JaExisteAtividadeAdicionadaException, 
-	HorarioJaOcupadoPorOutraAtividadeException {
+	HorarioJaOcupadoPorOutraAtividadeException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException {
 		this.atividade1 = new AtividadeBuilder()
 				.comValor(new BigDecimal("100"))
 				.isPaga(true)
@@ -43,7 +45,11 @@ public class ItemSimplesTest {
 				.isPaga(true)
 				.getAtividade();
 
-		this.evento = new EventoBuilder().comNome("Evento").getEvento();
+		this.evento = new EventoBuilder()
+				.comNome("Evento")
+				.comStatus(StatusDoEvento.ABERTO_PARA_INSCRICAO)
+				.getEvento();
+				
 		this.evento.adicionaAtividade(atividade1);
 		this.evento.adicionaAtividade(atividade2);
 		this.inscricao = new Inscricao(evento, new Participacao(TipoDeParticipante.PROFISSIONAL, new Usuario()));

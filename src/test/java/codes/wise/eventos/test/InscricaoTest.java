@@ -12,12 +12,14 @@ import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.atividade.AtividadeBuilder;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
+import codes.wise.eventos.modelo.evento.StatusDoEvento;
 import codes.wise.eventos.modelo.evento.TipoDeEvento;
 import codes.wise.eventos.modelo.excecoes.AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.NaoExisteAtividadeNaListaDeAtividadesDoEventoException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.inscricao.ItemSimples;
 import codes.wise.eventos.modelo.usuario.Participacao;
@@ -37,8 +39,9 @@ public class InscricaoTest {
 	
 	@Before
 	public void inicializa() 
-			throws JaExisteAtividadeAdicionadaException, HorarioJaOcupadoPorOutraAtividadeException, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException {
+			throws JaExisteAtividadeAdicionadaException, HorarioJaOcupadoPorOutraAtividadeException, NaoExisteAtividadeNaListaDeAtividadesDoEventoException, AtividadeNaoPagaNaoPodeSerUmItemDeInscricaoException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException {
 		evento = new EventoBuilder()
+				.comStatus(StatusDoEvento.ABERTO_PARA_INSCRICAO)
 				.comNome("Semana Cultural")
 				.deTipo(TipoDeEvento.SEMANA_CULTURAL)
 				.comInicio(LocalDateTime.now())

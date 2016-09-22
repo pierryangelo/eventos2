@@ -13,13 +13,16 @@ import codes.wise.eventos.modelo.atividade.TipoDeAtividade;
 import codes.wise.eventos.modelo.cupom.CupomPorAtividade;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
+import codes.wise.eventos.modelo.evento.StatusDoEvento;
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 public class CupomPorAtividadeTest {
 	private Evento evento = new EventoBuilder()
 			.comNome("Novo Evento")
+			.comStatus(StatusDoEvento.ABERTO_PARA_INSCRICAO)
 			.getEvento();
 	private CupomPorAtividade cupomPorAtividade1, cupomPorAtividade2;
 	private Atividade atividade1, atividade2;
@@ -27,7 +30,7 @@ public class CupomPorAtividadeTest {
 	@Before
 	public void inicializa() throws
 		JaExisteAtividadeAdicionadaException,
-		HorarioJaOcupadoPorOutraAtividadeException {
+		HorarioJaOcupadoPorOutraAtividadeException, StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException {
 		atividade1 = new AtividadeBuilder()
 				.comNome("Palestra")
 				.comValor(new BigDecimal("100"))
