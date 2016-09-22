@@ -197,7 +197,5 @@ public class Teste {
 		inscricao.adicionarItem(itemComposto);
 		em.getTransaction().commit();
 		em.close();
-		
-		System.out.println(itemComposto.getPreco().toString());
 	}
 }
