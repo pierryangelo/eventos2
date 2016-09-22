@@ -13,6 +13,7 @@ import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.evento.EventoBuilder;
 import codes.wise.eventos.modelo.evento.StatusDoEvento;
 import codes.wise.eventos.modelo.evento.TipoDeEvento;
+import codes.wise.eventos.modelo.excecoes.DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
 import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
@@ -130,7 +131,8 @@ public class EventoTest {
 	@Test(expected=EventoSateliteJaAdicionadoException.class)
 	public void naoAceitaEventosSatelitesRepetidos() 
 			throws EventoSateliteJaAdicionadoException, 
-			EventoSateliteNaoPodeSerEventoPaiException {
+			EventoSateliteNaoPodeSerEventoPaiException, 
+			DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException {
 		evento1.adicionaEventoSatelite(evento3);
 		evento1.adicionaEventoSatelite(evento3);
 	}
@@ -138,7 +140,8 @@ public class EventoTest {
 	@Test(expected=EventoSateliteNaoPodeSerEventoPaiException.class)
 	public void eventoSateliteNaoPodeSerEventoPai() 
 			throws EventoSateliteJaAdicionadoException, 
-			EventoSateliteNaoPodeSerEventoPaiException {
+			EventoSateliteNaoPodeSerEventoPaiException, 
+			DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException {
 		evento2.adicionaEventoSatelite(evento2);
 	}
 	

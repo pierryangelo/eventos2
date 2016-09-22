@@ -18,6 +18,7 @@ import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.EventoNaoContemCupomException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
+import codes.wise.eventos.modelo.excecoes.ItemSimplesJaExisteEmUmItemCompostoException;
 import codes.wise.eventos.modelo.usuario.Participacao;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
@@ -43,8 +44,23 @@ public class Inscricao {
 		this.participacao.setInscricao(this);
 	}
 	
+	/**
+	 * Adiciona um item ao carrinho (simples ou composto), porém não 
+	 * adiciona itens simples que constarem em um item composto do carrinho.
+	 * @param item
+	 * @throws ItemJaAdicionadoAoCarrinhoException
+	 * @throws ItemSimplesJaExisteEmUmItemCompostoException 
+	 */
 	public void adicionarItem(Item item) 
-			throws ItemJaAdicionadoAoCarrinhoException {
+			throws ItemJaAdicionadoAoCarrinhoException, 
+			ItemSimplesJaExisteEmUmItemCompostoException {
+		for (Item i : this.carrinho) {
+			if (i instanceof ItemComposto) {
+				if (((ItemComposto) i).getItens().contains(item)) {
+					throw new ItemSimplesJaExisteEmUmItemCompostoException();
+				}
+			}
+		}
 		if (this.carrinho.contains(item)) {
 			throw new ItemJaAdicionadoAoCarrinhoException();
 		}
@@ -83,7 +99,7 @@ public class Inscricao {
 	 * caso seja, retorna 1, caso contrário a porcentagem da soma dos descontos.
 	 * @return desconto : BigDecimal
 	 */
-	private BigDecimal calcularDesconto() { 
+	public BigDecimal calcularDesconto() { 
 		BigDecimal desconto = this.cupons.stream()
                 .map(Descontavel::getPorcentagemDoDesconto)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

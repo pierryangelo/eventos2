@@ -17,6 +17,14 @@ public class TimeUtil {
 				|| (fim2.isAfter(inicio1) && fim2.isBefore(fim1));
 	}
 	
+	/**
+	 * Verifica se as datas inicio e término estão contidas no limite inicial e final (inclusive).
+	 * @param limiteInicial
+	 * @param limiteFinal
+	 * @param inicio
+	 * @param termino
+	 * @return boolean
+	 */
 	public static boolean dentroDoIntervalo(LocalDateTime limiteInicial, LocalDateTime limiteFinal, 
 			LocalDateTime inicio, LocalDateTime termino) {
 		return ((inicio.isAfter(limiteInicial) && inicio.isBefore(limiteFinal)) 

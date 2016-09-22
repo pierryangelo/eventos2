@@ -34,6 +34,7 @@ import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeNaoCorrespondeAoInte
 import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
+import codes.wise.eventos.modelo.excecoes.ItemSimplesJaExisteEmUmItemCompostoException;
 import codes.wise.eventos.modelo.excecoes.ItemSimplesJaExisteNaListaDeItensCompostos;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.MembroJaExisteNaListaDeMembros;
@@ -66,7 +67,7 @@ public class Teste {
 	DescontoDoItemCompostoNaoPodeSerNegativoException,
 	StatusDoEventoNaoPermiteMaisInscricoesException, 
 	StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException, 
-	HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException{
+	HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException, ItemSimplesJaExisteEmUmItemCompostoException{
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("eventos");
 		EntityManager em = emf.createEntityManager();
 		
@@ -139,8 +140,6 @@ public class Teste {
 		.deNome("Sala B")
 		.getEspacoFisico();
 		
-		
-		// verificar passar valor no construtor do item
 		Atividade atividade1 = new AtividadeBuilder()
 				.comNome("CursoJPA")
 				.comValor(new BigDecimal(100))

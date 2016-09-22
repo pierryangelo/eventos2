@@ -21,7 +21,11 @@ import com.google.common.collect.Sets;
 import codes.wise.eventos.modelo.agenda.Agenda;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.cupom.Cupom;
+import codes.wise.eventos.modelo.cupom.CupomPorCodigo;
+import codes.wise.eventos.modelo.cupom.CupomPorData;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
+import codes.wise.eventos.modelo.excecoes.CupomJaExisteNaListaDeCuponsException;
+import codes.wise.eventos.modelo.excecoes.DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
 import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException;
@@ -29,6 +33,7 @@ import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeExcep
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.JaExisteEspacoFisicoAdicionadoException;
+import codes.wise.eventos.modelo.excecoes.JaExisteUmCupomComEsteCodigoException;
 import codes.wise.eventos.modelo.excecoes.NaoExisteAgendaParaEsteEspacoFisicoException;
 import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
 import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteFazerCheckinException;
@@ -75,6 +80,23 @@ public class Evento {
 		this.inscricoes = Lists.newArrayList();
 	}
 	
+	public void adicionaCupom(Cupom cupom) 
+			throws CupomJaExisteNaListaDeCuponsException, 
+			JaExisteUmCupomComEsteCodigoException {
+		if (this.cupons.contains(cupom)) {
+			throw new CupomJaExisteNaListaDeCuponsException();
+		}
+		if (cupom instanceof CupomPorCodigo) {
+			for (Cupom c : this.cupons) {
+				if (c instanceof CupomPorCodigo && 
+						((CupomPorCodigo) c).getCodigo().equals(((CupomPorCodigo) cupom).getCodigo())) {
+					throw new JaExisteUmCupomComEsteCodigoException();
+				}
+			}
+		}
+		this.cupons.add(cupom);
+	}
+	
 	public void adicionarInscricao(Inscricao inscricao) 
 			throws InscricaoJaExisteException, 
 			StatusDoEventoNaoPermiteMaisInscricoesException {
@@ -88,7 +110,13 @@ public class Evento {
 	}
 	
 	public void adicionaEventoSatelite(Evento eventoSatelite) 
-			throws EventoSateliteJaAdicionadoException, EventoSateliteNaoPodeSerEventoPaiException {
+			throws EventoSateliteJaAdicionadoException, 
+			EventoSateliteNaoPodeSerEventoPaiException, 
+			DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException {
+		if (!TimeUtil.dentroDoIntervalo(this.getInicio(), this.getTermino(), 
+				eventoSatelite.getInicio(), eventoSatelite.getTermino())) {
+			throw new DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException();
+		}
 		if (this.eventosSatelites.contains(eventoSatelite)) {
 			throw new EventoSateliteJaAdicionadoException();
 		}
