@@ -19,11 +19,14 @@ import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeExcep
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteFazerCheckinException;
 import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteMaisInscricoesException;
+import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
 import codes.wise.eventos.modelo.usuario.Participacao;
 import codes.wise.eventos.modelo.usuario.Pessoa;
 import codes.wise.eventos.modelo.usuario.TipoDeParticipante;
+import codes.wise.eventos.modelo.usuario.Usuario;
 import codes.wise.eventos.modelo.usuario.UsuarioBuilder;
 
 public class EventoTest {
@@ -132,4 +135,21 @@ public class EventoTest {
 		evento.adicionaAtividade(atividade);
 	}
 	
+	@Test(expected=StatusDoEventoNaoPermiteFazerCheckinException.class)
+	public void naoFazCheckinSeOStatusForEM_ANDAMENTO() 
+			throws UsuarioJaFezCheckinException, 
+			StatusDoEventoNaoPermiteFazerCheckinException {
+		Usuario usuario = new Usuario();
+		evento.setStatus(StatusDoEvento.EM_ANDAMENTO);
+		evento.fazerCheckin(usuario);
+	}
+	
+	@Test(expected=StatusDoEventoNaoPermiteFazerCheckinException.class)
+	public void naoFazCheckinSeOStatusForENCERRADO() 
+			throws UsuarioJaFezCheckinException, 
+			StatusDoEventoNaoPermiteFazerCheckinException {
+		Usuario usuario = new Usuario();
+		evento.setStatus(StatusDoEvento.ENCERRADO);
+		evento.fazerCheckin(usuario);
+	}
 }

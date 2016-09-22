@@ -33,6 +33,7 @@ public class Inscricao {
 	private List<Cupom> cupons;
 	@OneToMany(mappedBy="inscricao")
 	private List<Item> carrinho;
+	private boolean isPaga;
 
 	public Inscricao(Evento evento, Participacao participacao) {
 		this.carrinho = Lists.newArrayList();
@@ -167,5 +168,13 @@ public class Inscricao {
 		} else if (!participacao.equals(other.participacao))
 			return false;
 		return true;
+	}
+
+	public boolean isPaga() {
+		return isPaga;
+	}
+
+	public void setPaga(boolean isPaga) {
+		this.isPaga = isPaga;
 	}
 }

@@ -1,7 +1,5 @@
 package codes.wise.eventos.test;
 
-import static org.junit.Assert.fail;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -25,14 +23,12 @@ import codes.wise.eventos.modelo.inscricao.ItemSimples;
 import codes.wise.eventos.modelo.usuario.Participacao;
 import codes.wise.eventos.modelo.usuario.Pessoa;
 import codes.wise.eventos.modelo.usuario.TipoDeParticipante;
-import codes.wise.eventos.modelo.usuario.Usuario;
 import codes.wise.eventos.modelo.usuario.UsuarioBuilder;
 
 public class InscricaoTest {
 	private Participacao participacao;
 	private Inscricao inscricao;
 	private Pessoa pessoa;
-	private Usuario usuario;
 	private Evento evento;
 	private Atividade atividade;
 	private ItemSimples itemSimples;

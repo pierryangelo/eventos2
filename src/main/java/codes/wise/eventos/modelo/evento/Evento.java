@@ -30,6 +30,7 @@ import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.JaExisteEspacoFisicoAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.NaoExisteAgendaParaEsteEspacoFisicoException;
 import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteFazerCheckinException;
 import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteMaisInscricoesException;
 import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
@@ -98,7 +99,10 @@ public class Evento {
 	}
 	
 	public void fazerCheckin(Usuario usuario) 
-			throws UsuarioJaFezCheckinException {
+			throws UsuarioJaFezCheckinException, StatusDoEventoNaoPermiteFazerCheckinException {
+		if (!this.status.equals(StatusDoEvento.ABERTO_PARA_INSCRICAO)) {
+			throw new StatusDoEventoNaoPermiteFazerCheckinException();
+		}
 		if (this.checkins.contains(usuario)) {
 			throw new UsuarioJaFezCheckinException();
 		}

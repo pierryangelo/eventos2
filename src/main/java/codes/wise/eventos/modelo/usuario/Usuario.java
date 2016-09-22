@@ -12,8 +12,14 @@ import javax.persistence.OneToOne;
 
 import com.google.common.collect.Lists;
 
+import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.OrganizacaoJaExisteNaListaDeOrganizacoesDoUsuarioException;
 import codes.wise.eventos.modelo.excecoes.ParticipacaoJaExisteNaListaDeParticipacoesDoUsuarioException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteFazerCheckinException;
+import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
+import codes.wise.eventos.modelo.excecoes.UsuarioNaoPodeFazerCheckinEmEventoComInscricaoNaoPagaException;
+import codes.wise.eventos.modelo.excecoes.UsuarioNaoPodeFazerCheckinEmEventoQueNaoConstaNaSuaListaDeParticipacoesException;
+import codes.wise.eventos.modelo.inscricao.Inscricao;
 
 @Entity
 public class Usuario {
@@ -50,6 +56,33 @@ public class Usuario {
 			throw new OrganizacaoJaExisteNaListaDeOrganizacoesDoUsuarioException();
 		}
 		this.organizacoes.add(organizacao);
+	}
+	
+	/**
+	 * Faz checkin do usuário em um evento que conste em sua lista de participações e o qual 
+	 * a inscrição está paga.
+	 * 
+	 * @param evento
+	 * @throws UsuarioNaoPodeFazerCheckinEmEventoComInscricaoNaoPagaException
+	 * @throws UsuarioNaoPodeFazerCheckinEmEventoQueNaoConstaNaSuaListaDeParticipacoesException
+	 * @throws UsuarioJaFezCheckinException
+	 * @throws StatusDoEventoNaoPermiteFazerCheckinException 
+	 */
+	public void fazerCheckin(Evento evento) 
+			throws UsuarioNaoPodeFazerCheckinEmEventoComInscricaoNaoPagaException, 
+			UsuarioNaoPodeFazerCheckinEmEventoQueNaoConstaNaSuaListaDeParticipacoesException, 
+			UsuarioJaFezCheckinException, StatusDoEventoNaoPermiteFazerCheckinException {
+		
+		for (Participacao participacao : this.participacoes) {
+			Inscricao inscricao = participacao.getInscricao();
+			if (!inscricao.isPaga()) {
+				throw new UsuarioNaoPodeFazerCheckinEmEventoComInscricaoNaoPagaException();
+			}
+			if (!inscricao.getEvento().equals(evento)) {
+				throw new UsuarioNaoPodeFazerCheckinEmEventoQueNaoConstaNaSuaListaDeParticipacoesException();
+			}
+			evento.fazerCheckin(this);
+		}
 	}
 
 	public Integer getId() {
