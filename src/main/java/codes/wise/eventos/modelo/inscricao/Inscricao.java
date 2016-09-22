@@ -16,9 +16,12 @@ import com.google.common.collect.Lists;
 import codes.wise.eventos.modelo.cupom.Cupom;
 import codes.wise.eventos.modelo.cupom.Descontavel;
 import codes.wise.eventos.modelo.evento.Evento;
+import codes.wise.eventos.modelo.excecoes.CupomNaoExisteNaCestaException;
 import codes.wise.eventos.modelo.excecoes.EventoNaoContemCupomException;
 import codes.wise.eventos.modelo.excecoes.ItemJaAdicionadoAoCarrinhoException;
+import codes.wise.eventos.modelo.excecoes.ItemNaoExisteNaCestaException;
 import codes.wise.eventos.modelo.excecoes.ItemSimplesJaExisteEmUmItemCompostoException;
+import codes.wise.eventos.modelo.pagamento.FormaDePagamento;
 import codes.wise.eventos.modelo.usuario.Participacao;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
@@ -35,6 +38,7 @@ public class Inscricao {
 	@OneToMany(mappedBy="inscricao")
 	private List<Item> carrinho;
 	private boolean isPaga;
+	private FormaDePagamento formaDePagamento;
 
 	public Inscricao(Evento evento, Participacao participacao) {
 		this.carrinho = Lists.newArrayList();
@@ -67,6 +71,27 @@ public class Inscricao {
 		this.carrinho.add(item);
 	}
 	
+	/**
+	 * Método somente para demonstração, pois pagamento poderia ser qualquer
+	 * interface externa.
+	 * @return boolean
+	 */
+	public boolean pagarInscricao() {
+		if (formaDePagamento.pagar(this.getTotalComDesconto())) {
+			isPaga = true;
+			return true;
+		}
+		return false;
+	}
+	
+	public void setFormaDePagamento(FormaDePagamento formaDePagamento) {
+		this.formaDePagamento = formaDePagamento;
+	}
+	
+	public FormaDePagamento getFormaDePagamento() {
+		return this.formaDePagamento;
+	}
+	
 	public BigDecimal getTotalBruto() {
 		BigDecimal total = carrinho.stream()
                 .map(Item::getPreco)
@@ -80,6 +105,22 @@ public class Inscricao {
 			throw new EventoNaoContemCupomException();
 		}
 		this.cupons.add(cupom);
+	}
+	
+	public void removerCupom(Cupom cupom) 
+			throws CupomNaoExisteNaCestaException {
+		if (!this.cupons.contains(cupom)) {
+			throw new CupomNaoExisteNaCestaException();
+		}
+		this.cupons.remove(cupom);
+	}
+	
+	public void removerItem(Item item) 
+			throws ItemNaoExisteNaCestaException {
+		if (!this.carrinho.contains(item)) {
+			throw new ItemNaoExisteNaCestaException();
+		}
+		this.carrinho.remove(item);
 	}
 	
 	/**
