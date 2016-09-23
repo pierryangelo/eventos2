@@ -14,13 +14,11 @@ import javax.persistence.OneToOne;
 import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
-import codes.wise.eventos.modelo.usuario.Equipe;
-import codes.wise.eventos.modelo.usuario.Responsavel;
+import codes.wise.eventos.modelo.usuario.EquipeResponsavel;
 import codes.wise.eventos.modelo.util.BigDecimalUtil;
 
 @Entity
 public class Atividade implements Agendavel {
-
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
@@ -33,7 +31,7 @@ public class Atividade implements Agendavel {
 	@Enumerated(EnumType.STRING)
 	private TipoDeAtividade tipoDeAtividade;
 	@OneToOne
-	private Equipe<Responsavel> equipeResponsavel;
+	private EquipeResponsavel equipeResponsavel;
 	private BigDecimal valor;
 	private Boolean isPaga;
 	
@@ -87,7 +85,7 @@ public class Atividade implements Agendavel {
 		this.tipoDeAtividade = tipoDeAtividade;
 	}
 	
-	public Boolean getIsPaga() {
+	public Boolean isPaga() {
 		return isPaga;
 	}
 	
@@ -95,11 +93,11 @@ public class Atividade implements Agendavel {
 		this.isPaga = isPaga;
 	}
 	
-	public Equipe<Responsavel> getEquipeResponsavel() {
+	public EquipeResponsavel getEquipeResponsavel() {
 		return equipeResponsavel;
 	}
 
-	public void setEquipeResponsavel(Equipe<Responsavel> equipeResponsavel) {
+	public void setEquipeResponsavel(EquipeResponsavel equipeResponsavel) {
 		this.equipeResponsavel = equipeResponsavel;
 	}
 
@@ -108,7 +106,7 @@ public class Atividade implements Agendavel {
 	}
 	
 	public BigDecimal getValor() {
-		return this.valor;
+		return BigDecimalUtil.paraMonetario(this.valor);
 	}
 
 	public Integer getId() {
@@ -125,6 +123,8 @@ public class Atividade implements Agendavel {
 		int result = 1;
 		result = prime * result + ((evento == null) ? 0 : evento.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
 	}
 
@@ -146,6 +146,16 @@ public class Atividade implements Agendavel {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		if (valor == null) {
+			if (other.valor != null)
+				return false;
+		} else if (!valor.equals(other.valor))
 			return false;
 		return true;
 	}

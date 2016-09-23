@@ -1,11 +1,12 @@
 package codes.wise.eventos.modelo.espaco_fisico;
 
 import static codes.wise.eventos.modelo.util.TimeUtil.verificaConflitoDeHorarios;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +19,7 @@ import com.javadocmd.simplelatlng.LatLng;
 
 import codes.wise.eventos.modelo.agenda.Agenda;
 import codes.wise.eventos.modelo.atividade.Atividade;
+import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException;
 import codes.wise.eventos.modelo.excecoes.EspacosFisicosComLocalizacoesIguaisException;
 import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;;
@@ -28,23 +30,25 @@ public class EspacoFisico {
 	private Integer id;
 	@OneToOne
 	private EspacoFisico espacoFisicoPai;
+	@OneToOne
+	private Evento evento;
 	private String nome;
 	private String endereco;
 	private String descricao;
 	private LatLng localizacao;
-	// to do: fazer teste da capacidade
 	private Integer capacidade;
+	@Enumerated(EnumType.STRING)
 	private TipoDeEspacoFisico tipoDeEspacoFisico;
-	@OneToMany
-	private List<Atividade> atividades;
-	@OneToMany
+	@OneToMany(mappedBy="espacoFisicoPai")
 	private List<EspacoFisico> espacosFisicosFilhos;
+	@OneToMany(mappedBy="espacoFisico")
+	private List<Atividade> atividades;
 
 	public EspacoFisico() {
-		this.atividades = Lists.newArrayList();
 		this.espacosFisicosFilhos = Lists.newArrayList();
+		this.atividades = Lists.newArrayList();
 	}
-	
+
 	public void adicionaAtividade(Atividade atividade) 
 			throws HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
 		for (Atividade a : atividades) {
@@ -60,8 +64,6 @@ public class EspacoFisico {
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) throws 
 			EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException, 
 			EspacosFisicosComLocalizacoesIguaisException {
-		checkNotNull(espacoFisico);
-		// to do: implementar hashCode
 		if (espacoFisico.equals(espacoFisicoPai)) {
 			throw new EspacoFisicoPaiNaoPodeEstarContidoEmEspacoFisicoFilhoException();
 		}
@@ -69,10 +71,6 @@ public class EspacoFisico {
 			throw new EspacosFisicosComLocalizacoesIguaisException();
 		}
 		this.espacosFisicosFilhos.add(espacoFisico);
-	}
-	
-	public String getAgenda() {
-		return Agenda.getAgendaOrdemCrescente(atividades);
 	}
 	
 	public EspacoFisico getEspacoFisicoPai() {
@@ -85,6 +83,10 @@ public class EspacoFisico {
 	
 	public LatLng getLocalizacao() {
 		return localizacao;
+	}
+	
+	public String getAgenda() {
+		return Agenda.getAgendaOrdemCrescente(atividades);
 	}
 	
 	public void setLocalizacao(LatLng localizacao) {
@@ -113,14 +115,6 @@ public class EspacoFisico {
 	
 	public void setTipoDeEspacoFisico(TipoDeEspacoFisico tipoDeEspacoFisico) {
 		this.tipoDeEspacoFisico = tipoDeEspacoFisico;
-	}
-	
-	public List<Atividade> getAtividades() {
-		return atividades;
-	}
-	
-	public void setAtividades(List<Atividade> atividades) {
-		this.atividades = atividades;
 	}
 	
 	public List<EspacoFisico> getEspacosFisicosFilhos() {
@@ -154,5 +148,4 @@ public class EspacoFisico {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
 }

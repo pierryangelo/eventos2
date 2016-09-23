@@ -6,18 +6,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import codes.wise.eventos.modelo.atividade.Atividade;
-
 @Entity
 public class Responsavel {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
-	private Pessoa pessoa;
+	private Usuario usuario;
 	private String curriculo;
 	
-	public Responsavel(Pessoa pessoa, String curriculo) {
-		this.pessoa = pessoa;
+	public Responsavel(Usuario usuario, String curriculo) {
+		this.usuario = usuario;
 		this.curriculo = curriculo;
 	}
 	
@@ -29,12 +27,12 @@ public class Responsavel {
 		this.id = id;
 	}
 	
-	public Pessoa getPessoa() {
-		return pessoa;
+	public Usuario getUsuario() {
+		return usuario;
 	}
 	
-	public void setPessoa(Pessoa pessoa) {
-		this.pessoa = pessoa;
+	public void setPessoa(Usuario usuario) {
+		this.usuario = usuario;
 	}
 	
 	public String getCurriculo() {
@@ -43,5 +41,9 @@ public class Responsavel {
 	
 	public void setCurriculo(String curriculo) {
 		this.curriculo = curriculo;
+	}
+	
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 }

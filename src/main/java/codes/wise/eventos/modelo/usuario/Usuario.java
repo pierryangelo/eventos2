@@ -5,29 +5,48 @@ import java.util.List;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.OneToOne;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import codes.wise.eventos.modelo.evento.Evento;
 import codes.wise.eventos.modelo.excecoes.OrganizacaoJaExisteNaListaDeOrganizacoesDoUsuarioException;
 import codes.wise.eventos.modelo.excecoes.ParticipacaoJaExisteNaListaDeParticipacoesDoUsuarioException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteFazerCheckinException;
+import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
+import codes.wise.eventos.modelo.excecoes.UsuarioNaoPodeFazerCheckinEmEventoComInscricaoNaoPagaException;
+import codes.wise.eventos.modelo.excecoes.UsuarioNaoPodeFazerCheckinEmEventoQueNaoConstaNaSuaListaDeParticipacoesException;
+import codes.wise.eventos.modelo.inscricao.Inscricao;
+import codes.wise.eventos.modelo.observer.Notificacao;
+import codes.wise.eventos.modelo.observer.Observador;
 
 @Entity
-@PrimaryKeyJoinColumn(name="id")
-public class Usuario extends Pessoa {
+public class Usuario implements Observador {
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer id;
 	private LocalDateTime dataCadastro;
 	private String email;
 	private String password; 
 	private Boolean isAtivo;
-	@ElementCollection
+	@OneToOne
+	private Pessoa pessoa;
+
+	@OneToMany(mappedBy="usuario")
 	private List<Organizacao> organizacoes;
-	@ElementCollection
+	@OneToMany(mappedBy="usuario")
 	private List<Participacao> participacoes;
+	@ElementCollection
+	private List<Notificacao> notificacoes;
 
 	public Usuario() {
 		this.organizacoes = Lists.newArrayList();
 		this.participacoes = Lists.newArrayList();
+		this.notificacoes = Lists.newArrayList();
 	}
 	
 	public void adicionarParticipacao(Participacao participacao) 
@@ -45,7 +64,42 @@ public class Usuario extends Pessoa {
 		}
 		this.organizacoes.add(organizacao);
 	}
+	
+	/**
+	 * Faz checkin do usuário em um evento que conste em sua lista de participações e o qual 
+	 * a inscrição está paga.
+	 * 
+	 * @param evento
+	 * @throws UsuarioNaoPodeFazerCheckinEmEventoComInscricaoNaoPagaException
+	 * @throws UsuarioNaoPodeFazerCheckinEmEventoQueNaoConstaNaSuaListaDeParticipacoesException
+	 * @throws UsuarioJaFezCheckinException
+	 * @throws StatusDoEventoNaoPermiteFazerCheckinException 
+	 */
+	public void fazerCheckin(Evento evento) 
+			throws UsuarioNaoPodeFazerCheckinEmEventoComInscricaoNaoPagaException, 
+			UsuarioNaoPodeFazerCheckinEmEventoQueNaoConstaNaSuaListaDeParticipacoesException, 
+			UsuarioJaFezCheckinException, StatusDoEventoNaoPermiteFazerCheckinException {
+		
+		for (Participacao participacao : this.participacoes) {
+			Inscricao inscricao = participacao.getInscricao();
+			if (!inscricao.isPaga()) {
+				throw new UsuarioNaoPodeFazerCheckinEmEventoComInscricaoNaoPagaException();
+			}
+			if (!inscricao.getEvento().equals(evento)) {
+				throw new UsuarioNaoPodeFazerCheckinEmEventoQueNaoConstaNaSuaListaDeParticipacoesException();
+			}
+			evento.fazerCheckin(this);
+		}
+	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
 	public LocalDateTime getDataCadastro() {
 		return dataCadastro;
 	}
@@ -92,5 +146,41 @@ public class Usuario extends Pessoa {
 
 	public void setEventosQueEstouInscrito(List<Participacao> participacoes) {
 		this.participacoes = participacoes;
+	}
+
+	public Pessoa getPessoa() {
+		return pessoa;
+	}
+
+	public void setPessoa(Pessoa pessoa) {
+		this.pessoa = pessoa;
+	}
+
+	public void setOrganizacoes(List<Organizacao> organizacoes) {
+		this.organizacoes = organizacoes;
+	}
+
+	public void setParticipacoes(List<Participacao> participacoes) {
+		this.participacoes = participacoes;
+	}
+
+	@Override
+	public String toString() {
+		return "Usuario [dataCadastro=" + dataCadastro + ", email=" + email + ", password=" + password + ", isAtivo="
+				+ isAtivo + ", organizacoes=" + organizacoes + ", participacoes=" + participacoes + "]";
+	}
+
+	@Override
+	public void atualizar(Notificacao notificacao) {
+		this.notificacoes.add(notificacao);
+	}
+	
+	/**
+	 * Retorna notificações mais recentes.
+	 * @return List<Notificacao>
+	 */
+	public List<Notificacao> getNotificacoes() {
+		this.notificacoes.sort((a1, a2) -> a2.getDataEHora().compareTo(a1.getDataEHora()));
+		return ImmutableList.copyOf(this.notificacoes);
 	}
 }

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
 import codes.wise.eventos.modelo.evento.Evento;
+import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.usuario.EquipeResponsavel;
 
 public class AtividadeBuilder {
@@ -34,7 +35,8 @@ public class AtividadeBuilder {
 		return this;
 	}
 	
-	public AtividadeBuilder noEspacoFisico(EspacoFisico espacoFisico) {
+	public AtividadeBuilder noEspacoFisico(EspacoFisico espacoFisico) 
+			throws HorarioJaOcupadoPorOutraAtividadeException {
 		this.atividade.setEspacoFisico(espacoFisico);
 		return this;
 	}

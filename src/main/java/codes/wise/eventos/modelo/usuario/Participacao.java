@@ -1,6 +1,8 @@
 package codes.wise.eventos.modelo.usuario;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,14 +18,12 @@ public class Participacao {
 	private Usuario usuario;
 	@OneToOne
 	private Inscricao inscricao;
+	@Enumerated(EnumType.STRING)
 	private TipoDeParticipante tipoDeParticipante;
+	@OneToOne
+	private EquipeResponsavel equipeResponsavel;
 	
-	public Participacao() {
-		
-	}
-	
-	public Participacao(Inscricao inscricao, TipoDeParticipante tipoDeParticipante, Usuario usuario) {
-		this.inscricao = inscricao;
+	public Participacao(TipoDeParticipante tipoDeParticipante, Usuario usuario) {
 		this.tipoDeParticipante = tipoDeParticipante;
 		this.usuario = usuario;
 	}
@@ -43,4 +43,29 @@ public class Participacao {
 	public void setTipoDeParticipante(TipoDeParticipante tipoDeParticipante) {
 		this.tipoDeParticipante = tipoDeParticipante;
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
+	public EquipeResponsavel getEquipeResponsavel() {
+		return equipeResponsavel;
+	}
+
+	public void setEquipeResponsavel(EquipeResponsavel equipeResponsavel) {
+		this.equipeResponsavel = equipeResponsavel;
+	}
+
 }

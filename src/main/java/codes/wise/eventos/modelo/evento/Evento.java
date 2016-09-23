@@ -14,26 +14,39 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import codes.wise.eventos.modelo.agenda.Agenda;
-import codes.wise.eventos.modelo.agenda.Agendavel;
 import codes.wise.eventos.modelo.atividade.Atividade;
 import codes.wise.eventos.modelo.cupom.Cupom;
+import codes.wise.eventos.modelo.cupom.CupomPorCodigo;
 import codes.wise.eventos.modelo.espaco_fisico.EspacoFisico;
+import codes.wise.eventos.modelo.excecoes.CupomJaExisteNaListaDeCuponsException;
+import codes.wise.eventos.modelo.excecoes.DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteJaAdicionadoException;
 import codes.wise.eventos.modelo.excecoes.EventoSateliteNaoPodeSerEventoPaiException;
-import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException;
+import codes.wise.eventos.modelo.excecoes.HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException;
+import codes.wise.eventos.modelo.excecoes.HorarioJaOcupadoPorOutraAtividadeException;
 import codes.wise.eventos.modelo.excecoes.InscricaoJaExisteException;
 import codes.wise.eventos.modelo.excecoes.JaExisteAtividadeAdicionadaException;
 import codes.wise.eventos.modelo.excecoes.JaExisteEspacoFisicoAdicionadoException;
+import codes.wise.eventos.modelo.excecoes.JaExisteUmCupomComEsteCodigoException;
+import codes.wise.eventos.modelo.excecoes.NaoExisteAgendaParaEsteEspacoFisicoException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteFazerCheckinException;
+import codes.wise.eventos.modelo.excecoes.StatusDoEventoNaoPermiteMaisInscricoesException;
 import codes.wise.eventos.modelo.excecoes.UsuarioJaFezCheckinException;
 import codes.wise.eventos.modelo.inscricao.Inscricao;
+import codes.wise.eventos.modelo.inscricao.ItemComposto;
+import codes.wise.eventos.modelo.inscricao.ItemSimples;
+import codes.wise.eventos.modelo.observer.Observavel;
 import codes.wise.eventos.modelo.usuario.Usuario;
+import codes.wise.eventos.modelo.util.TimeUtil;
 
 @Entity
-public class Evento implements Agendavel {
+public class Evento extends Observavel {
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	@OneToOne
@@ -45,17 +58,17 @@ public class Evento implements Agendavel {
 	@Enumerated(EnumType.STRING)
 	private TipoDeEvento tipo;
 	private StatusDoEvento status;
-	@OneToMany
+	@OneToMany(mappedBy="evento")
 	private List<Atividade> atividades;
-	@ElementCollection
-	private List<Cupom> cupons;
 	@OneToMany
+	private List<Cupom> cupons;
+	@OneToMany(mappedBy="evento")
 	private List<EspacoFisico> espacosFisicos;
-	@ElementCollection
+	@OneToMany(mappedBy="eventoPai")
 	private List<Evento> eventosSatelites;
 	@ElementCollection
 	private Set<Usuario> checkins;
-	@ElementCollection
+	@OneToMany(mappedBy="evento")
 	private List<Inscricao> inscricoes;
 	
 	public Evento() {
@@ -67,16 +80,55 @@ public class Evento implements Agendavel {
 		this.inscricoes = Lists.newArrayList();
 	}
 	
+	public void adicionaCupom(Cupom cupom) 
+			throws CupomJaExisteNaListaDeCuponsException, 
+			JaExisteUmCupomComEsteCodigoException {
+		if (this.cupons.contains(cupom)) {
+			throw new CupomJaExisteNaListaDeCuponsException();
+		}
+		if (cupom instanceof CupomPorCodigo) {
+			for (Cupom c : this.cupons) {
+				if (c instanceof CupomPorCodigo && 
+						((CupomPorCodigo) c).getCodigo().equals(((CupomPorCodigo) cupom).getCodigo())) {
+					throw new JaExisteUmCupomComEsteCodigoException();
+				}
+			}
+		}
+		this.cupons.add(cupom);
+	}
+	
+	/**
+	 * Adiciona as inscrições e, para cada inscrição paga, adiciona o usuário participante 
+	 * daquela inscrição à lista de observadores.
+	 * @param inscricao
+	 * @throws InscricaoJaExisteException
+	 * @throws StatusDoEventoNaoPermiteMaisInscricoesException
+	 */
 	public void adicionarInscricao(Inscricao inscricao) 
-			throws InscricaoJaExisteException {
+			throws InscricaoJaExisteException, 
+			StatusDoEventoNaoPermiteMaisInscricoesException {
+		if (!this.status.equals(StatusDoEvento.ABERTO_PARA_INSCRICAO)) {
+			throw new StatusDoEventoNaoPermiteMaisInscricoesException();
+		}
 		if (this.inscricoes.contains(inscricao)) {
 			throw new InscricaoJaExisteException();
 		}
+		this.inscricoes.forEach(i -> {
+			if (i.isPaga()) {
+				this.adicionarObservador(i.getParticipacao().getUsuario());
+			}
+		});
 		this.inscricoes.add(inscricao);
 	}
 	
 	public void adicionaEventoSatelite(Evento eventoSatelite) 
-			throws EventoSateliteJaAdicionadoException, EventoSateliteNaoPodeSerEventoPaiException {
+			throws EventoSateliteJaAdicionadoException, 
+			EventoSateliteNaoPodeSerEventoPaiException, 
+			DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException {
+		if (!TimeUtil.dentroDoIntervalo(this.getInicio(), this.getTermino(), 
+				eventoSatelite.getInicio(), eventoSatelite.getTermino())) {
+			throw new DatasDeInicioEFimDoEventoSateliteNaoPodemEstarForaDoIntervaloDoEventoException();
+		}
 		if (this.eventosSatelites.contains(eventoSatelite)) {
 			throw new EventoSateliteJaAdicionadoException();
 		}
@@ -84,25 +136,39 @@ public class Evento implements Agendavel {
 			throw new EventoSateliteNaoPodeSerEventoPaiException();
 		}
 		this.eventosSatelites.add(eventoSatelite);
+		
+		this.setNotificacao("Evento satélite: " + eventoSatelite.getNome() + " foi adicionado!");
+		this.notificarObservadores();
 	}
 	
 	public void fazerCheckin(Usuario usuario) 
-			throws UsuarioJaFezCheckinException {
+			throws UsuarioJaFezCheckinException, StatusDoEventoNaoPermiteFazerCheckinException {
+		if (!this.status.equals(StatusDoEvento.ABERTO_PARA_INSCRICAO)) {
+			throw new StatusDoEventoNaoPermiteFazerCheckinException();
+		}
 		if (this.checkins.contains(usuario)) {
 			throw new UsuarioJaFezCheckinException();
 		}
 		this.checkins.add(usuario);
 	}
 	
-	// to do: hashCode e equals
-	public void adicionaAtividade(Atividade atividade, EspacoFisico espacoFisico) 
+	public void adicionaAtividade(Atividade atividade) 
 			throws JaExisteAtividadeAdicionadaException, 
-			HorarioDaAtividadeConflitaComOutraAtividadeNoMesmoEspacoFisicoException {
+			HorarioJaOcupadoPorOutraAtividadeException, 
+			StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException, 
+			HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException {
+		if (!TimeUtil.dentroDoIntervalo(this.inicio, this.termino, atividade.getInicio(), atividade.getTermino())) {
+			throw new HorarioDaAtividadeNaoCorrespondeAoIntervaloDoEventoException();
+		}
+		if (!this.status.equals(StatusDoEvento.ABERTO_PARA_INSCRICAO)) {
+			throw new StatusDoEventoNaoPermiteAdicaoDeNovasAtividadesException();
+		}
 		if (this.atividades.contains(atividade)) {
 			throw new JaExisteAtividadeAdicionadaException();
 		}
-		espacoFisico.adicionaAtividade(atividade);
 		this.atividades.add(atividade);
+		this.setNotificacao("Uma nova atividade: " + atividade.getNome() + " foi adicionada!");
+		this.notificarObservadores();
 	}
 	
 	public void adicionaEspacoFisico(EspacoFisico espacoFisico) 
@@ -111,14 +177,83 @@ public class Evento implements Agendavel {
 			throw new JaExisteEspacoFisicoAdicionadoException();
 		}
 		this.espacosFisicos.add(espacoFisico);
+		this.setNotificacao("Novo espaço físico: " + espacoFisico.getNome() + " foi adicionado!");
+		this.notificarObservadores();
 	}
 	
 	/**
 	 * Retorna agenda do evento ordenada por data de início das atividades.
 	 * @return String
 	 */
-	public String getAgenda() {
+	public String getAgendaAtividades() {
 		return Agenda.getAgendaOrdemCrescente(atividades);
+	}
+	
+	/**
+	 * Retorna agenda por espaço físico ordenada por data de início das atividades.
+	 * @param espacoFisico
+	 * @return String
+	 * @throws NaoExisteAgendaParaEsteEspacoFisicoException 
+	 */
+	public String getAgendaEspacoFisico(EspacoFisico espacoFisico) 
+			throws NaoExisteAgendaParaEsteEspacoFisicoException {
+		if (this.espacosFisicos.contains(espacoFisico)) {
+			return espacoFisico.getAgenda();
+		}
+		throw new NaoExisteAgendaParaEsteEspacoFisicoException();
+	}
+	
+	/**
+	 * Retorna os usuários inscritos em determinada atividade, para isso, percorre a lista de
+	 * inscricoes verificando as atividades de cada item, através dessas, o usuário.
+	 * @param atividade
+	 * @return List<Usuario>
+	 */
+	public List<Usuario> getInscritosPorAtividade(Atividade atividade) {
+		List<Usuario> inscritos = Lists.newArrayList();
+		this.inscricoes.forEach(inscricao -> {
+			inscricao.getCarrinho().forEach(item -> {
+				if (item instanceof ItemSimples) {
+					if (((ItemSimples) item).getAtividade().equals(atividade)) {
+						inscritos.add(inscricao.getParticipacao().getUsuario());
+					}
+				} else if (item instanceof ItemComposto) {
+					((ItemComposto) item).getItens().forEach(itemSimples -> {
+						if (itemSimples.getAtividade().equals(atividade)) {
+							inscritos.add(inscricao.getParticipacao().getUsuario());
+						}
+					});
+				}
+			});
+		});
+		
+		return ImmutableList.copyOf(inscritos);
+	}
+	
+	/**
+	 * Retorna os usuários inscritos em determinado espaco físico, para isso, percorre a lista de
+	 * inscricoes verificando os espaços físicos de cada atividade.
+	 * @param espacoFisico
+	 * @return List<Usuario>
+	 */
+	public List<Usuario> getInscritosPorEspacoFisico(EspacoFisico espacoFisico) {
+		List<Usuario> inscritos = Lists.newArrayList();
+		this.inscricoes.forEach(inscricao -> {
+			inscricao.getCarrinho().forEach(item -> {
+				if (item instanceof ItemSimples) {
+					if (((ItemSimples) item).getAtividade().getEspacoFisico().equals(espacoFisico)) {
+						inscritos.add(inscricao.getParticipacao().getUsuario());
+					}
+				} else if (item instanceof ItemComposto) {
+					((ItemComposto) item).getItens().forEach(itemSimples -> {
+						if (itemSimples.getAtividade().getEspacoFisico().equals(espacoFisico)) {
+							inscritos.add(inscricao.getParticipacao().getUsuario());
+						}
+					});
+				}
+			});
+		});
+		return ImmutableList.copyOf(inscritos);
 	}
 	
 	public Integer getId() {
@@ -175,6 +310,8 @@ public class Evento implements Agendavel {
 
 	public void setStatus(StatusDoEvento status) {
 		this.status = status;
+		this.setNotificacao("O status do evento mudou para: " + this.status.toString() + " foi adicionado!");
+		this.notificarObservadores();
 	}
 
 	public List<Atividade> getAtividades() {
@@ -199,5 +336,86 @@ public class Evento implements Agendavel {
 
 	public void setEventoPai(Evento eventoPai) {
 		this.eventoPai = eventoPai;
+	}
+
+	public List<Cupom> getCupons() {
+		return cupons;
+	}
+
+	public void setCupons(List<Cupom> cupons) {
+		this.cupons = cupons;
+	}
+
+	public List<EspacoFisico> getEspacosFisicos() {
+		return espacosFisicos;
+	}
+
+	public void setEspacosFisicos(List<EspacoFisico> espacosFisicos) {
+		this.espacosFisicos = espacosFisicos;
+	}
+
+	public List<Evento> getEventosSatelites() {
+		return eventosSatelites;
+	}
+
+	public void setEventosSatelites(List<Evento> eventosSatelites) {
+		this.eventosSatelites = eventosSatelites;
+	}
+
+	public Set<Usuario> getCheckins() {
+		return checkins;
+	}
+
+	public void setCheckins(Set<Usuario> checkins) {
+		this.checkins = checkins;
+	}
+
+	public List<Inscricao> getInscricoes() {
+		return inscricoes;
+	}
+
+	public void setInscricoes(List<Inscricao> inscricoes) {
+		this.inscricoes = inscricoes;
+	}
+	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((eventoPai == null) ? 0 : eventoPai.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Evento))
+			return false;
+		Evento other = (Evento) obj;
+		if (eventoPai == null) {
+			if (other.eventoPai != null)
+				return false;
+		} else if (!eventoPai.equals(other.eventoPai))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		if (tipo != other.tipo)
+			return false;
+		return true;
 	}
 }

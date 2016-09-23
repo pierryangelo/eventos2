@@ -36,6 +36,11 @@ public class EventoBuilder {
 		return this;
 	}
 	
+	public EventoBuilder comStatus(StatusDoEvento status) {
+		this.evento.setStatus(status);
+		return this;
+	}
+	
 	public Evento getEvento() {
 		return this.evento;
 	}

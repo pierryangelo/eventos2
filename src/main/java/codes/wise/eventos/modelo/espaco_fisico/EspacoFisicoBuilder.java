@@ -42,5 +42,4 @@ public class EspacoFisicoBuilder {
 	public EspacoFisico getEspacoFisico() {
 		return this.espacoFisico;
 	}
-	
 }
