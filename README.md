@@ -5,5 +5,10 @@ Implementação de um sistema de controle de eventos proposto pela disciplina Pr
 ### Diagrama de classes
 ![Diagrama de classes](./eventos2_class_diagram.png)
 
+### Slides
+http://slides.com/pierryangelopereira/eventos-v2
+
 ### Deploy
 Importar como projeto maven no eclipse.
+
+
